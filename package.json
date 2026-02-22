@@ -1,0 +1,38 @@
+{
+  "name": "playwright-framework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "test": "npm run lint && playwright test",
+    "test:report": "npm run lint && playwright test --reporter=html && node scripts/style-report.js && start playwright-report/index.html",
+    "test:record": "npx playwright codegen",
+    "test:debug": "npx playwright test --debug"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "tsc --noEmit"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
+    "allure-commandline": "^2.36.0",
+    "allure-playwright": "^3.4.5",
+    "eslint": "^10.0.1",
+    "eslint-plugin-jsdoc": "^62.7.0",
+    "eslint-plugin-playwright": "^2.7.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^16.2.7"
+  }
+}
