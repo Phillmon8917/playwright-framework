@@ -7,7 +7,6 @@
     "prepare": "husky install",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test:report": "npm run lint && playwright test --reporter=html && node scripts/style-report.js && start playwright-report/index.html",
     "test:record": "npx playwright codegen",
     "test:debug": "npx playwright test --debug"
