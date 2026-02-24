@@ -9,9 +9,9 @@ export default [
     languageOptions: {
       parser: tsparser,
       parserOptions: {
-        project: "./tsconfig.json",   
-        tsconfigRootDir: import.meta.dirname
-      }
+        project: "./tsconfig.json",
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     plugins: {
       "@typescript-eslint": tseslint,
@@ -33,8 +33,9 @@ export default [
       "@typescript-eslint/await-thenable": "error",
       "@typescript-eslint/no-unnecessary-type-assertion": "error",
       "@typescript-eslint/no-unnecessary-condition": "error",
+      semi: ["error", "always"],
       "prefer-const": "error",
-      "eqeqeq": ["error", "always"],
+      eqeqeq: ["error", "always"],
       "no-var": "error",
       "no-unreachable": "error",
       "no-loop-func": "error",
@@ -43,7 +44,7 @@ export default [
       "no-self-compare": "error",
       "no-throw-literal": "error",
       "no-console": "error",
-      "no-debugger": "error"
-    }
-  }
+      "no-debugger": "error",
+    },
+  },
 ];

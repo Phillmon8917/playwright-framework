@@ -9,6 +9,8 @@
     "allowUnusedLabels": false,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }

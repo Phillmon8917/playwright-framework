@@ -269,7 +269,7 @@ html = html.replace(
   `<body>
    <div class="pw-report-header">
      <div class="pw-report-header-title">
-       Tester: <span>Phillimon</span> &nbsp;·&nbsp; Application: <span>OrangeHRM</span>
+       Tester: <span>Phillimon</span> &nbsp;·&nbsp; Application: <span>PHP TRAVELS</span>
      </div>
      <div class="pw-report-header-badge">Playwright Report</div>
    </div>`,

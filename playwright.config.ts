@@ -13,7 +13,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   timeout: 60 * 1000,
-  globalTimeout: 15 * 60 * 1000,
+  globalTimeout: 10 * 60 * 1000,
   testDir: "./src/tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -31,19 +31,19 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     baseURL:
-      "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
+      "https://phptravels.net/flights",
     trace: "off",
     headless: !!process.env.CI,
     screenshot: "on",
     video: "retain-on-failure",
-    actionTimeout: 60 * 1000, // 60 seconds for element/action
-    navigationTimeout: 45 * 1000, // 45 seconds for page load
+    actionTimeout: 60 * 1000, 
+    navigationTimeout: 60 * 1000,
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "Heroku Project",
+      name: "PHPTRAVELS Project",
       use: { ...devices["Desktop Chrome"] },
     },
 
