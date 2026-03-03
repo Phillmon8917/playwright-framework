@@ -53,4 +53,4 @@ jobs:
             fail "Direct PRs from 'main' are not allowed"
           fi
 
-          echo "✅ PR branch rules passed."
+          echo "✅ PR branch rules ran successfully."
