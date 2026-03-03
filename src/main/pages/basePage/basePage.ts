@@ -7,6 +7,6 @@ export class BasePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.modulars = ActionsContainer.getInstance(page);
+    this.modulars = new ActionsContainer(page);
   }
 }
