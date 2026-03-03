@@ -291,5 +291,4 @@ test.describe("Home Page @regression", () => {
       "Assertion Passed - Navigation to accessibility page is successful",
     );
   });
-
 });
