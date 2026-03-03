@@ -2,6 +2,7 @@ import { Locator } from "@playwright/test";
 import { logger } from "../../utils/logger/logger";
 
 export class IframeActions {
+  
   /**
    * Fills the given element with the given text in the iframe.
    * Waits for the element to be visible, then fills it with the given text.

@@ -9,7 +9,7 @@ export class ElementActions {
    * @param {string} elementName - The name of the element to be cleared.
    * @param {string} methodName - The name of the calling method.
    */
-  public async clear(
+  public async clearElement(
     locator: Locator,
     elementName: string,
     methodName: string,
@@ -165,6 +165,7 @@ export class ElementActions {
     clickType?: "left" | "right" | "double",
   ): Promise<void> {
     try {
+      await locator.scrollIntoViewIfNeeded();
       await locator.waitFor({ state: "visible" });
 
       if (!clickType) {
@@ -374,6 +375,40 @@ export class ElementActions {
       } else {
         logger.error(
           `${methodName} - Failed to count elements for ${locatorName}: ${String(err)}`,
+        );
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * Clicks on the given element using JavaScript evaluate.
+   * Fires the click event directly on the DOM element via JavaScript.
+   * Logs an info message if the operation is successful.
+   * Logs an error if the operation fails.
+   * @param {Locator} locator - The locator of the element to be clicked.
+   * @param {string} locatorName - The name of the element to be clicked.
+   * @param {string} methodName - The name of the calling method.
+   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
+   */
+  public async jsClick(
+    locator: Locator,
+    locatorName: string,
+    methodName: string,
+  ): Promise<void> {
+    try {
+      await locator.scrollIntoViewIfNeeded();
+      await locator.waitFor({ state: "visible" });
+      await locator.evaluate((el) => (el as HTMLElement).click());
+      logger.info(`${methodName} - Successfully JS-clicked ${locatorName}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(
+          `${methodName} - Failed to JS-click ${locatorName}: ${err.message}`,
+        );
+      } else {
+        logger.error(
+          `${methodName} - Failed to JS-click ${locatorName}: ${String(err)}`,
         );
       }
       throw err;
