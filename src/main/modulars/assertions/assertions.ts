@@ -107,4 +107,41 @@ export class ElementAssertions {
       throw err;
     }
   }
+
+/**
+ * Asserts that the given element's text matches the given expected value.
+ * If type is set to "exact", the assertion will check for an exact match.
+ * If type is set to "contains", the assertion will check if the element's text contains the given expected value.
+ * Logs an info message if the assertion is successful.
+ * Logs an error if the assertion fails.
+ * @param {Locator} locator - The locator of the element whose text is to be asserted.
+ * @param {string | RegExp} expected - The expected value of the element's text.
+ * @param {string} locatorName - The name of the element whose text is to be asserted.
+ * @param {string} methodName - The name of the calling method.
+ * @param {"exact" | "contains"} type - The type of the assertion. Defaults to "exact".
+ */
+  public async assertElementText(
+    locator: Locator,
+    expected: string | RegExp,
+    locatorName: string,
+    methodName: string,
+    type: "exact" | "contains" = "exact",
+  ): Promise<void> {
+    try {
+      if (type === "exact") {
+        await expect(locator).toHaveText(expected);
+      } else {
+        await expect(locator).toContainText(expected);
+      }
+      logger.info(
+        `${methodName} - ${locatorName} text assertion passed: ${expected}`,
+      );
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      logger.error(
+        `${methodName} - ${locatorName} text assertion failed: ${expected} - ${message}`,
+      );
+      throw err;
+    }
+  }
 }

@@ -10,8 +10,6 @@ import { NetworkAssertions } from "../../modulars/network/network";
 import { ToggleActions } from "../../modulars/toggle/toggle";
 
 export class ActionsContainer {
-  private static instance: ActionsContainer | null = null;
-
   readonly assertions: ElementAssertions;
   readonly browser: BrowserActions;
   readonly calendar: CalendarNavigator;
@@ -22,22 +20,15 @@ export class ActionsContainer {
   readonly network: NetworkAssertions;
   readonly toggle: ToggleActions;
 
-  private constructor(page: Page) {
+  constructor(page: Page) {
     this.assertions = new ElementAssertions();
-    this.browser = new BrowserActions(page);
-    this.calendar = new CalendarNavigator(page);
     this.dropdown = new DropdownActions();
     this.elements = new ElementActions();
     this.iframe = new IframeActions();
+    this.toggle = new ToggleActions();
+    this.browser = new BrowserActions(page);
+    this.calendar = new CalendarNavigator(page);
     this.keyboard = new KeyboardActions(page);
     this.network = new NetworkAssertions(page);
-    this.toggle = new ToggleActions();
-  }
-
-  static getInstance(page: Page): ActionsContainer {
-    if (this.instance === null) {
-      this.instance = new ActionsContainer(page);
-    }
-    return this.instance;
   }
 }
