@@ -1,0 +1,47 @@
+# bitbucket-pipelines.yml
+pipelines:
+  pull-requests:
+    "**":
+      - step:
+          name: "Strict PR Branch Enforcement"
+          image: atlassian/default-image:3
+          script:
+            - echo "Starting PR branch validation..."
+
+            # Source and destination branches from environment
+            - SOURCE_BRANCH=${BITBUCKET_PR_SOURCE_BRANCH}
+            - DEST_BRANCH=${BITBUCKET_PR_DESTINATION_BRANCH}
+            - echo "Source: $SOURCE_BRANCH"
+            - echo "Destination: $DEST_BRANCH"
+
+            # Fail function
+            - fail() { echo "ERROR: $1"; exit 1; }
+
+            # Rule 1: New branches must start with hotfix/, bugfix/, feature/
+            - if [[ "$SOURCE_BRANCH" != develop && "$SOURCE_BRANCH" != qa && "$SOURCE_BRANCH" != main ]]; then
+                if [[ ! "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]]; then
+                  fail "Branch '$SOURCE_BRANCH' must start with feature/, bugfix/, or hotfix/";
+                fi
+              fi
+
+            # Rule 2: PRs from new branches → develop only
+            - if [[ "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]] && [[ "$DEST_BRANCH" != develop ]]; then
+                fail "New branches ($SOURCE_BRANCH) must create PRs to 'develop' only";
+              fi
+
+            # Rule 3: PRs from develop → qa only
+            - if [[ "$SOURCE_BRANCH" == develop ]] && [[ "$DEST_BRANCH" != qa ]]; then
+                fail "PRs from 'develop' must target 'qa'";
+              fi
+
+            # Rule 4: PRs from qa → main only
+            - if [[ "$SOURCE_BRANCH" == qa ]] && [[ "$DEST_BRANCH" != main ]]; then
+                fail "PRs from 'qa' must target 'main'";
+              fi
+
+            # Rule 5: PRs from main are not allowed
+            - if [[ "$SOURCE_BRANCH" == main ]]; then
+                fail "Direct PRs from 'main' are not allowed";
+              fi
+
+            - echo "✅ PR branch rules passed."
