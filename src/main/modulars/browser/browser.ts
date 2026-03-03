@@ -7,7 +7,7 @@ export class BrowserActions {
 
   constructor(page: Page) {
     this.page = page;
-    this.loadingIndicator = page.locator('.page-loader > div');
+    this.loadingIndicator = page.locator("#page-loader div");
   }
 
   /**
@@ -15,8 +15,8 @@ export class BrowserActions {
    * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
    * @throws {Error} - If the operation fails.
    */
-  public async loadThePage(): Promise<void> {
-    await this.page.goto("/");
+  public async loadThePage(currentPage: Page): Promise<void> {
+    await currentPage.goto("/", { waitUntil: "domcontentloaded" });
   }
 
   /**
@@ -296,8 +296,58 @@ export class BrowserActions {
    * Logs an info message when the loading indicator has disappeared.
    * @returns {Promise<void>} - A promise which resolves when the loading indicator has disappeared.
    */
-  public async waitForPageLoaderToDisappear(): Promise<void> {
-    await this.loadingIndicator.waitFor({ state: "detached" });
-    logger.info("Loading indicator has disappeared");
+  public async waitForPageLoaderToDisappear(methodName: string): Promise<void> {
+    try {
+      if ((await this.loadingIndicator.count()) > 0) {
+        await this.loadingIndicator
+          .first()
+          .waitFor({ state: "hidden", timeout: 15000 });
+        logger.info(`${methodName} - Loader disappeared (hidden or detached)`);
+      } else {
+        logger.info(`${methodName} - Loader was not present, continuing`);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(
+          `${methodName} - Loader did not disappear within 15s: ${err.message}`,
+        );
+      } else {
+        logger.error(
+          `${methodName} - Loader did not disappear within 15s: ${String(err)}`,
+        );
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * Waits for the page to reach a certain state of readiness.
+   * Logs an info message when the page has reached the given state.
+   * @param {string} state - The state of readiness to wait for. Can be "domcontentloaded", "load", or "networkidle". Defaults to "networkidle".
+   * @param {string} [methodName] - The name of the calling method.
+   * @returns {Promise<void>} - A promise which resolves when the page has reached the given state.
+   * @throws {Error} - If the operation fails.
+   */
+  public async waitForPageReady(
+    state: "domcontentloaded" | "load" | "networkidle" = "networkidle",
+    methodName?: string,
+  ): Promise<void> {
+    try {
+      await this.page.waitForLoadState(state);
+      logger.info(
+        `${methodName ?? "waitForPageReady"} - Page ready with state: ${state}`,
+      );
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(
+          `${methodName ?? "waitForPageReady"} - Failed waiting for page ready (${state}): ${err.message}`,
+        );
+      } else {
+        logger.error(
+          `${methodName ?? "waitForPageReady"} - Failed waiting for page ready (${state}): ${String(err)}`,
+        );
+      }
+      throw err;
+    }
   }
 }
