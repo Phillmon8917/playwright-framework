@@ -4,9 +4,11 @@ on:
   pull_request:
     branches:
       - "**"   # Run on all PRs
+    types: [opened, synchronize, reopened]   # Trigger on these PR events
 
 jobs:
   branch-validation:
+    name: branch-validation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR
@@ -16,14 +18,12 @@ jobs:
         run: |
           echo "Starting PR branch validation..."
 
-          # Get source and target branch names
-          SOURCE_BRANCH="${{ github.head_ref }}"
-          DEST_BRANCH="${{ github.base_ref }}"
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          DEST_BRANCH="${{ github.event.pull_request.base.ref }}"
 
           echo "Source: $SOURCE_BRANCH"
           echo "Destination: $DEST_BRANCH"
 
-          # Fail function
           fail() { echo "ERROR: $1"; exit 1; }
 
           # Rule 1: New branches must start with hotfix/, bugfix/, feature/
