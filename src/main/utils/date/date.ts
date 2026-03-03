@@ -1,4 +1,5 @@
 export class DateUtil {
+  
   /**
    * Formats a given date into the specified pattern.
    * Supported tokens:
