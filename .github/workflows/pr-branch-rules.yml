@@ -1,0 +1,56 @@
+name: PR Branch Rules Enforcement
+
+on:
+  pull_request:
+    branches:
+      - "**"   # Run on all PRs
+
+jobs:
+  branch-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v3
+
+      - name: Validate PR branches
+        run: |
+          echo "Starting PR branch validation..."
+
+          # Get source and target branch names
+          SOURCE_BRANCH="${{ github.head_ref }}"
+          DEST_BRANCH="${{ github.base_ref }}"
+
+          echo "Source: $SOURCE_BRANCH"
+          echo "Destination: $DEST_BRANCH"
+
+          # Fail function
+          fail() { echo "ERROR: $1"; exit 1; }
+
+          # Rule 1: New branches must start with hotfix/, bugfix/, feature/
+          if [[ "$SOURCE_BRANCH" != "develop" && "$SOURCE_BRANCH" != "qa" && "$SOURCE_BRANCH" != "main" ]]; then
+            if [[ ! "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]]; then
+              fail "Branch '$SOURCE_BRANCH' must start with feature/, bugfix/, or hotfix/"
+            fi
+          fi
+
+          # Rule 2: PRs from new branches → develop only
+          if [[ "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]] && [[ "$DEST_BRANCH" != "develop" ]]; then
+            fail "New branches ($SOURCE_BRANCH) must create PRs to 'develop' only"
+          fi
+
+          # Rule 3: PRs from develop → qa only
+          if [[ "$SOURCE_BRANCH" == "develop" ]] && [[ "$DEST_BRANCH" != "qa" ]]; then
+            fail "PRs from 'develop' must target 'qa'"
+          fi
+
+          # Rule 4: PRs from qa → main only
+          if [[ "$SOURCE_BRANCH" == "qa" ]] && [[ "$DEST_BRANCH" != "main" ]]; then
+            fail "PRs from 'qa' must target 'main'"
+          fi
+
+          # Rule 5: PRs from main are not allowed
+          if [[ "$SOURCE_BRANCH" == "main" ]]; then
+            fail "Direct PRs from 'main' are not allowed"
+          fi
+
+          echo "✅ PR branch rules passed."
