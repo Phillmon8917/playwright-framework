@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+      - qa
+      - develop
   workflow_dispatch:
 jobs:
   test-report:
