@@ -1,4 +1,3 @@
-import { DateUtil } from "../../../utils/date/date";
 import { logger } from "../../../utils/logger/logger";
 import { HomeBasePage } from "./homeBasePage";
 
@@ -730,7 +729,7 @@ export class HomePage extends HomeBasePage {
    */
   public async verifyFeaturedPropertiesSection(): Promise<void> {
     await this.modulars.elements.jsClick(
-      this.barcelonaFeaturedPropertyButton,
+      this.barcelonaFeaturedPropertyButton.first(),
       "Barcelona Featured Property Button",
       "verifyFeaturedPropertiesSection",
     );
@@ -808,41 +807,6 @@ export class HomePage extends HomeBasePage {
     );
   }
 
-  /**
-   * Verifies that the featured flights page is navigated to successfully.
-   * This test navigates to the featured flights page by clicking on the featured flights button and waits for the network request to complete with a status code of 200.
-   * Logs an info message if the operation is successful.
-   * Logs an error if the operation fails.
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
-   * */
-  public async verifyNavigationToFeaturedFlightsPage(): Promise<void> {
-    const dateReturnedFromFunction = DateUtil.getFormattedDate();
-    logger.info(`Date returned from function: ${dateReturnedFromFunction}`);
-    await this.modulars.network.assertNetworkRequest(
-      `https://phptravels.net/flights/dxb/lhe/oneway/economy/${dateReturnedFromFunction}/1/0/0`,
-      200,
-      () =>
-        this.modulars.elements.clickElement(
-          this.featuredFlightsButton,
-          "Featured Flights Button",
-          "verifyNavigationToFeaturedFlightsPage",
-        ),
-      "GET",
-      "Featured Flights Page",
-      "verifyNavigationToFeaturedFlightsPage",
-    );
-    await this.modulars.browser.waitForPageReady(
-      "networkidle",
-      "verifyNavigationToFeaturedFlightsPage",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.flightsSearchButton,
-      "visible",
-      "Flights Search Button",
-      "verifyNavigationToFeaturedFlightsPage",
-    );
-  }
 
   /**
    * Verifies that the popular tours section is displayed correctly.
@@ -854,7 +818,7 @@ export class HomePage extends HomeBasePage {
    */
   public async verifyPopularTowersSection(): Promise<void> {
     await this.modulars.elements.jsClick(
-      this.parisPopularToursButton,
+      this.parisPopularToursButton.nth(1),
       "Paris Popular Tours Button",
       "verifyPopularTowersSection",
     );

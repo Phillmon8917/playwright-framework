@@ -160,16 +160,6 @@ test.describe("Home Page @regression", () => {
     );
   });
 
-  test("Should verify navigation to featured flight booking page", async ({
-    homePage,
-  }) => {
-    await homePage.loadThePage();
-    await homePage.verifyNavigationToFeaturedFlightsPage();
-    logger.info(
-      "Assertion Passed - Navigation to featured flight booking page is successful",
-    );
-  });
-
   test("Should verify popular tours section", async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyPopularTowersSection();

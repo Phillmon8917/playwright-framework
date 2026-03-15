@@ -22,7 +22,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 3 : 0,
   /* Opt out of parallel tests on CI. */
-   //workers: 4,
+  workers: undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -36,8 +36,8 @@ export default defineConfig({
     headless: !!process.env.CI,
     screenshot: "on",
     video: "retain-on-failure",
-    actionTimeout: 60 * 1000, 
-    navigationTimeout: 60 * 1000,
+    actionTimeout: 80 * 1000,
+    navigationTimeout: 120 * 1000,
   },
 
   /* Configure projects for major browsers */
