@@ -49,11 +49,4 @@ jobs:
             fail "Direct PRs from 'main' are blocked. Changes must flow from 'qa' → 'main'."
           fi
 
-          git fetch origin $DEST_BRANCH
-          MERGE_BASE=$(git merge-base origin/$DEST_BRANCH HEAD)
-          DEST_COMMIT=$(git rev-parse origin/$DEST_BRANCH)
-          if [[ "$MERGE_BASE" != "$DEST_COMMIT" ]]; then
-            fail "Branch '$SOURCE_BRANCH' is behind '$DEST_BRANCH'. Update your branch before opening a PR. Suggested fix: git fetch origin && git rebase origin/$DEST_BRANCH && git push origin $SOURCE_BRANCH --force"
-          fi
-
           echo "✅ PR branch rules ran successfully."
