@@ -53,4 +53,12 @@ jobs:
             fail "Direct PRs from 'main' are not allowed. Changes must come from 'qa'."
           fi
 
+          # Rule 6: Ensure source branch is up to date with destination
+          git fetch origin $DEST_BRANCH
+          MERGE_BASE=$(git merge-base origin/$DEST_BRANCH HEAD)
+          DEST_COMMIT=$(git rev-parse origin/$DEST_BRANCH)
+          if [[ "$MERGE_BASE" != "$DEST_COMMIT" ]]; then
+            fail "Branch '$SOURCE_BRANCH' is behind '$DEST_BRANCH'. Please rebase or merge latest changes before opening PR."
+          fi
+
           echo "✅ PR branch rules ran successfully."
