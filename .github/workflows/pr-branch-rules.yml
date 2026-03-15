@@ -3,7 +3,7 @@ name: PR Branch Rules Enforcement
 on:
   pull_request:
     branches:
-      - "**" # Run on all PRs
+      - "**"
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Validate PR branches
         shell: bash
@@ -27,39 +27,33 @@ jobs:
 
           fail() { echo "❌ ERROR: $1"; exit 1; }
 
-          # Rule 1: New branches must start with hotfix/, bugfix/, feature/
           if [[ "$SOURCE_BRANCH" != "develop" && "$SOURCE_BRANCH" != "qa" && "$SOURCE_BRANCH" != "main" ]]; then
             if [[ ! "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]]; then
               fail "Branch '$SOURCE_BRANCH' is invalid. New branches must start with 'feature/', 'bugfix/', or 'hotfix/'."
             fi
           fi
 
-          # Rule 2: PRs from new branches → develop only
           if [[ "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]] && [[ "$DEST_BRANCH" != "develop" ]]; then
             fail "Branch '$SOURCE_BRANCH' must target 'develop'. PRs from feature/bugfix/hotfix branches cannot target '$DEST_BRANCH'."
           fi
 
-          # Rule 3: PRs from develop → qa only
           if [[ "$SOURCE_BRANCH" == "develop" ]] && [[ "$DEST_BRANCH" != "qa" ]]; then
             fail "Branch 'develop' must target 'qa'. PRs from 'develop' to '$DEST_BRANCH' are not allowed."
           fi
 
-          # Rule 4: PRs from qa → main only
           if [[ "$SOURCE_BRANCH" == "qa" ]] && [[ "$DEST_BRANCH" != "main" ]]; then
             fail "Branch 'qa' must target 'main'. PRs from 'qa' to '$DEST_BRANCH' are not allowed."
           fi
 
-          # Rule 5: Block PRs from main
           if [[ "$SOURCE_BRANCH" == "main" ]]; then
             fail "Direct PRs from 'main' are blocked. Changes must flow from 'qa' → 'main'."
           fi
 
-          # Rule 6: Ensure source branch is up to date with destination
           git fetch origin $DEST_BRANCH
           MERGE_BASE=$(git merge-base origin/$DEST_BRANCH HEAD)
           DEST_COMMIT=$(git rev-parse origin/$DEST_BRANCH)
           if [[ "$MERGE_BASE" != "$DEST_COMMIT" ]]; then
-            fail "Branch '$SOURCE_BRANCH' is behind '$DEST_BRANCH'. Update your branch before opening a PR. Suggested steps: git fetch origin && git rebase origin/$DEST_BRANCH && git push origin $SOURCE_BRANCH --force"
+            fail "Branch '$SOURCE_BRANCH' is behind '$DEST_BRANCH'. Update your branch before opening a PR. Suggested fix: git fetch origin && git rebase origin/$DEST_BRANCH && git push origin $SOURCE_BRANCH --force"
           fi
 
           echo "✅ PR branch rules ran successfully."
