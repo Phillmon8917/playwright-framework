@@ -45,6 +45,13 @@ export default [
       "no-throw-literal": "error",
       "no-console": "error",
       "no-debugger": "error",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "after-used",
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
 ];

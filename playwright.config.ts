@@ -12,7 +12,8 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  timeout: 60 * 1000,
+  globalSetup: "./global-setup.ts",
+  timeout: 80 * 1000,
   globalTimeout: 10 * 60 * 1000,
   testDir: "./src/tests",
   /* Run tests in files in parallel */
@@ -22,7 +23,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 3 : 0,
   /* Opt out of parallel tests on CI. */
-   //workers: 4,
+  //workers: 4,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -30,13 +31,12 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    baseURL:
-      "https://phptravels.net/",
+    baseURL: "https://phptravels.net/",
     trace: "off",
     headless: !!process.env.CI,
     screenshot: "on",
     video: "retain-on-failure",
-    actionTimeout: 60 * 1000, 
+    actionTimeout: 60 * 1000,
     navigationTimeout: 60 * 1000,
   },
 
