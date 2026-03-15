@@ -3,8 +3,8 @@ name: PR Branch Rules Enforcement
 on:
   pull_request:
     branches:
-      - "**"   # Run on all PRs
-    types: [opened, synchronize, reopened]   # Trigger on these PR events
+      - "**" # Run on all PRs
+    types: [opened, synchronize, reopened]
 
 jobs:
   branch-validation:
@@ -40,17 +40,17 @@ jobs:
 
           # Rule 3: PRs from develop → qa only
           if [[ "$SOURCE_BRANCH" == "develop" ]] && [[ "$DEST_BRANCH" != "qa" ]]; then
-            fail "PRs from 'develop' must target 'qa'"
+            fail "PRs from 'develop' must target 'qa' only"
           fi
 
           # Rule 4: PRs from qa → main only
           if [[ "$SOURCE_BRANCH" == "qa" ]] && [[ "$DEST_BRANCH" != "main" ]]; then
-            fail "PRs from 'qa' must target 'main'"
+            fail "PRs from 'qa' must target 'main' only"
           fi
 
-          # Rule 5: PRs from main are not allowed
+          # Rule 5: Block PRs from main
           if [[ "$SOURCE_BRANCH" == "main" ]]; then
-            fail "Direct PRs from 'main' are not allowed"
+            fail "Direct PRs from 'main' are not allowed. Changes must come from 'qa'."
           fi
 
           echo "✅ PR branch rules ran successfully."
