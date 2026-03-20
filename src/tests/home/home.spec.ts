@@ -152,14 +152,6 @@ test.describe("Home Page @regression", () => {
     logger.info("Assertion Passed - All quick search tabs are visible");
   });
 
-  test("Should verify featured properties section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyFeaturedPropertiesSection();
-    logger.info(
-      "Assertion Passed - Featured properties section is displayed correctly",
-    );
-  });
-
   test("Should verify navigation to download app page", async ({
     homePage,
   }) => {

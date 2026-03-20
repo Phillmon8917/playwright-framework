@@ -81,20 +81,6 @@ export class HomeBasePage extends BasePage {
 
   //others
   protected readonly downloadAppNavigationLink: Locator;
-  protected readonly barcelonaFeaturedPropertyButton: Locator;
-  protected readonly barcelonaBadge: Locator;
-  protected readonly lahoreFeaturedPropertyButton: Locator;
-  protected readonly lahoreBadge: Locator;
-  protected readonly dubaiFeaturedPropertyButton: Locator;
-  protected readonly dubaiBadge: Locator;
-  protected readonly newYorkFeaturedPropertyButton: Locator;
-  protected readonly newYorkBadge: Locator;
-  protected readonly santoriniFeaturedPropertyButton: Locator;
-  protected readonly santoriniBadge: Locator;
-  protected readonly tokyoFeaturedPropertyButton: Locator;
-  protected readonly tokyoBadge: Locator;
-  protected readonly maldivesFeaturedPropertyButton: Locator;
-  protected readonly maldivesBadge: Locator;
 
   //Quick Search links
   protected readonly visaQuickSearchTab: Locator;
@@ -272,38 +258,6 @@ export class HomeBasePage extends BasePage {
     this.downloadAppNavigationLink = page.getByRole("link", {
       name: "Google Play",
     });
-    this.barcelonaFeaturedPropertyButton = page.getByRole("button", {
-      name: "Barcelona",
-    });
-    this.barcelonaBadge = page.locator("span", { hasText: "Barcelona" });
-    this.barcelonaBadge = page.locator("span", { hasText: "Barcelona" });
-    this.lahoreFeaturedPropertyButton = page.getByRole("button", {
-      name: "Lahore",
-    });
-    this.lahoreBadge = page.locator("span", { hasText: "Lahore" });
-    this.dubaiFeaturedPropertyButton = page
-      .getByRole("button", { name: "Dubai" })
-      .first();
-    this.dubaiBadge = page.locator("span", { hasText: "Dubai" });
-    this.newYorkFeaturedPropertyButton = page
-      .getByRole("button", { name: "New York" })
-      .first();
-    this.newYorkBadge = page.locator("span", { hasText: "New York" });
-    this.santoriniFeaturedPropertyButton = page.getByRole("button", {
-      name: "Santorini",
-    });
-    this.santoriniBadge = page.locator("span", { hasText: "Santorini" });
-    this.tokyoFeaturedPropertyButton = page
-      .getByRole("button", { name: "Tokyo" })
-      .first();
-    this.tokyoBadge = page.locator("span", { hasText: "Tokyo" });
-    this.maldivesFeaturedPropertyButton = page.getByRole("button", {
-      name: "Maldives",
-    });
-    this.maldivesBadge = page.locator("span.bg-black\\/60", {
-      hasText: "Maldives",
-    });
-
     // Quick Search Tabs
     this.visaQuickSearchTab = page.getByRole("tab", {
       name: "card_membership Visa",
