@@ -1,4 +1,5 @@
 name: Generate Test Report
+
 on:
   push:
     branches:
@@ -9,6 +10,17 @@ on:
 jobs:
   test-report:
     runs-on: ubuntu-latest
+    env: # job-level env applies to all steps
+      ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      LOCAL_TEST_TIMEOUT: ${{ vars.LOCAL_TEST_TIMEOUT }}
+      TEST_TIMEOUT: ${{ vars.TEST_TIMEOUT }}
+      GLOBAL_TIMEOUT: ${{ vars.GLOBAL_TIMEOUT }}
+      ACTION_TIMEOUT: ${{ vars.ACTION_TIMEOUT }}
+      NAVIGATION_TIMEOUT: ${{ vars.NAVIGATION_TIMEOUT }}
+      BASE_URL: ${{ vars.BASE_URL }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -26,10 +38,6 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run test report
-        env:
-          ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
         run: |
           npm run lint
           npx playwright test --reporter=html

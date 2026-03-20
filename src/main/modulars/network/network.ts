@@ -37,7 +37,7 @@ export class NetworkAssertions {
           : true;
         return urlMatch && methodMatch;
       },
-      { timeout: 60000 },
+      { timeout: Number(process.env.LOCAL_TEST_TIMEOUT) || 30_000 },
     );
 
     if (trigger) await trigger();
