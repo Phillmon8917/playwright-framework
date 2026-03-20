@@ -95,17 +95,6 @@ export class HomeBasePage extends BasePage {
   protected readonly tokyoBadge: Locator;
   protected readonly maldivesFeaturedPropertyButton: Locator;
   protected readonly maldivesBadge: Locator;
-  protected readonly featuredFlightsButton: Locator;
-  protected readonly parisPopularToursButton: Locator;
-  protected readonly parisPopularToursBadge: Locator;
-  protected readonly dubaiPopularToursButton: Locator;
-  protected readonly dubaiPopularToursBadge: Locator;
-  protected readonly tokyoPopularToursButton: Locator;
-  protected readonly tokyoPopularToursBadge: Locator;
-  protected readonly denpasarPopularToursButton: Locator;
-  protected readonly denpasarPopularToursBadge: Locator;
-  protected readonly newYorkPopularToursButton: Locator;
-  protected readonly newYorkPopularToursBadge: Locator;
 
   //Quick Search links
   protected readonly visaQuickSearchTab: Locator;
@@ -118,24 +107,6 @@ export class HomeBasePage extends BasePage {
   protected readonly flightsSearchButton: Locator;
   protected readonly staysQuickSearchTab: Locator;
   protected readonly staysSearchButton: Locator;
-
-  //Featured Cars
-  protected readonly dubaiCarsButton: Locator;
-  protected readonly dubaiCarsBadge: Locator;
-  protected readonly dubaiInternationalAirportButton: Locator;
-  protected readonly dubaiInternationalAirportBadge: Locator;
-  protected readonly acariguaCarsButton: Locator;
-  protected readonly acariguaCarsBadge: Locator;
-  protected readonly zanagaCarsButton: Locator;
-  protected readonly zanagaCarsBadge: Locator;
-  protected readonly albuqCarsButton: Locator;
-  protected readonly albuqCarsBadge: Locator;
-  protected readonly alghaydahCarsButton: Locator;
-  protected readonly alghaydahCarsBadge: Locator;
-  protected readonly barquisimetoCarsButton: Locator;
-  protected readonly barquisimetoCarsBadge: Locator;
-  protected readonly beverleySpringsCarsButton: Locator;
-  protected readonly beverleySpringsCarsBadge: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -332,35 +303,6 @@ export class HomeBasePage extends BasePage {
     this.maldivesBadge = page.locator("span.bg-black\\/60", {
       hasText: "Maldives",
     });
-    this.featuredFlightsButton = page.locator(
-      'a[href*="flights/dxb/lhe/oneway"]',
-    );
-    this.parisPopularToursButton = page.getByRole("button", { name: "Paris" });
-    this.parisPopularToursBadge = page.locator("span", { hasText: "Paris" });
-    this.dubaiPopularToursButton = page
-      .getByRole("button", { name: "Dubai" })
-      .nth(1);
-    this.dubaiPopularToursBadge = page
-      .locator("span", { hasText: "Dubai" })
-      .nth(1);
-    this.tokyoPopularToursButton = page
-      .getByRole("button", { name: "Tokyo" })
-      .nth(1);
-    this.tokyoPopularToursBadge = page
-      .locator("span", { hasText: "Tokyo" })
-      .nth(1);
-    this.denpasarPopularToursButton = page.getByRole("button", {
-      name: "Denpasar",
-    });
-    this.denpasarPopularToursBadge = page.locator("span", {
-      hasText: "Denpasar",
-    });
-    this.newYorkPopularToursButton = page
-      .getByRole("button", { name: "New York" })
-      .nth(1);
-    this.newYorkPopularToursBadge = page
-      .locator("span", { hasText: "New York" })
-      .nth(1);
 
     // Quick Search Tabs
     this.visaQuickSearchTab = page.getByRole("tab", {
@@ -391,57 +333,5 @@ export class HomeBasePage extends BasePage {
     this.staysSearchButton = page.getByRole("button", {
       name: /Search Hotels|Searching/i,
     });
-
-    //Featured Cars
-    this.dubaiCarsButton = page
-      .locator("span.bg-black\\/40", {
-        hasText: "Dubai",
-      })
-      .nth(2);
-
-    // Dubai badge (location badge with icon)
-    this.dubaiCarsBadge = page.getByText("location_on Dubai").nth(3);
-
-    // Dubai International Airport button
-    this.dubaiInternationalAirportButton = page.locator("button", {
-      hasText: "Dubai International Airport",
-    });
-
-    // Dubai International Airport badge
-    this.dubaiInternationalAirportBadge = page
-      .getByText("location_on Dubai International Airport")
-      .first();
-
-    // Acarigua button + badge
-    this.acariguaCarsButton = page.locator("button", { hasText: "Acarigua" });
-    this.acariguaCarsBadge = page.getByText("location_on Acarigua");
-
-    // Zanaga button + badge
-    this.zanagaCarsButton = page.locator("button", { hasText: "Zanaga" });
-    this.zanagaCarsBadge = page.getByText("location_on Zanaga");
-
-    // Albuq button
-    this.albuqCarsButton = page.locator("button", { hasText: "Albuq" });
-    this.albuqCarsBadge = page.getByText("location_on Albuq");
-
-    // Al Ghaydah button
-    this.alghaydahCarsButton = page.locator("button", {
-      hasText: "Al Ghaydah",
-    });
-    this.alghaydahCarsBadge = page.getByText("location_on Al Ghaydah");
-
-    // Barquisimeto button + badge
-    this.barquisimetoCarsButton = page.locator("button", {
-      hasText: "Barquisimeto",
-    });
-    this.barquisimetoCarsBadge = page.getByText("location_on Barquisimeto");
-
-    // Beverley Springs button + badge
-    this.beverleySpringsCarsButton = page.locator("button", {
-      hasText: "Beverley Springs",
-    });
-    this.beverleySpringsCarsBadge = page.getByText(
-      "location_on Beverley Springs",
-    );
   }
 }

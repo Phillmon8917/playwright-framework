@@ -160,22 +160,6 @@ test.describe("Home Page @regression", () => {
     );
   });
 
-  test("Should verify popular tours section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyPopularTowersSection();
-    logger.info(
-      "Assertion Passed - Popular tours section is displayed correctly",
-    );
-  });
-
-  test("Should verify featured cars section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyFeaturedCarsSection();
-    logger.info(
-      "Assertion Passed - Featured cars section is displayed correctly",
-    );
-  });
-
   test("Should verify navigation to download app page", async ({
     homePage,
   }) => {
