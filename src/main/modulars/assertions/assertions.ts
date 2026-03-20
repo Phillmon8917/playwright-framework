@@ -290,4 +290,38 @@ export class ElementAssertions {
       throw err;
     }
   }
+
+  /**
+   * Asserts that the given actual value matches the expected value.
+   * Logs an info message if the assertion is successful.
+   * Logs an error if the assertion fails.
+   * @param {T} actual - The actual value to be compared.
+   * @param {T} expected - The expected value to be compared.
+   * @param {string} valueName - The name of the value being compared.
+   * @param {string} methodName - The name of the calling method.
+   */
+  public async assertValuesEqual<T>(
+    actual: T,
+    expected: T,
+    valueName: string,
+    methodName: string,
+  ): Promise<void> {
+    try {
+      if (actual === expected) {
+        logger.info(
+          `${methodName} - ${valueName} values match: actual="${actual}", expected="${expected}"`,
+        );
+      } else {
+        throw new Error(
+          `${valueName} values do not match: actual="${actual}", expected="${expected}"`,
+        );
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      logger.error(
+        `${methodName} - ${valueName} comparison failed: ${message}`,
+      );
+      throw err;
+    }
+  }
 }
