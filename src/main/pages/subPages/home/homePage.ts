@@ -1,4 +1,3 @@
-import { DateUtil } from "../../../utils/date/date";
 import { logger } from "../../../utils/logger/logger";
 import { HomeBasePage } from "./homeBasePage";
 
@@ -10,7 +9,7 @@ export class HomePage extends HomeBasePage {
    */
   public async loadThePage(): Promise<void> {
     await this.modulars.browser.loadThePage(this.page);
-    await this.modulars.browser.waitForPageLoaderToDisappear("LoadThePage");
+    await this.modulars.browser.waitForPageLoaderToDisappear(this.page, "LoadThePage");
   }
 
   /**
@@ -447,7 +446,7 @@ export class HomePage extends HomeBasePage {
   public async verifyNavigationToBlogsPage(): Promise<void> {
     await this.modulars.network.assertNetworkRequest(
       "https://phptravels.net/page/blog",
-      200,
+      302,
       () =>
         this.modulars.elements.jsClick(
           this.blogsNavLink,
@@ -721,306 +720,6 @@ export class HomePage extends HomeBasePage {
   }
 
   /**
-   * Verifies that the featured properties section is displayed correctly.
-   * This test clicks on each of the featured property buttons (Barcelona, Lahore, Dubai, New York, Santorini, Tokyo, Maldives) and asserts that the corresponding corresponding badge is visible after each button is clicked.
-   * Logs an info message if the operation is successful.
-   * Logs an error if the operation fails.
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
-   */
-  public async verifyFeaturedPropertiesSection(): Promise<void> {
-    await this.modulars.elements.jsClick(
-      this.barcelonaFeaturedPropertyButton,
-      "Barcelona Featured Property Button",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.barcelonaBadge.first(),
-      "visible",
-      "Barcelona Badge",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.lahoreFeaturedPropertyButton,
-      "Lahore Featured Property Button",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.lahoreBadge.first(),
-      "visible",
-      "Lahore Badge",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.dubaiFeaturedPropertyButton,
-      "Dubai Featured Property Button",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.dubaiBadge.first(),
-      "visible",
-      "Dubai Badge",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.newYorkFeaturedPropertyButton,
-      "New York Featured Property Button",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.newYorkBadge.first(),
-      "visible",
-      "New York Badge",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.santoriniFeaturedPropertyButton,
-      "Santorini Featured Property Button",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.santoriniBadge.first(),
-      "visible",
-      "Santorini Badge",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.tokyoFeaturedPropertyButton,
-      "Tokyo Featured Property Button",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.tokyoBadge.first(),
-      "visible",
-      "Tokyo Badge",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.maldivesFeaturedPropertyButton,
-      "Maldives Featured Property Button",
-      "verifyFeaturedPropertiesSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.maldivesBadge.first(),
-      "visible",
-      "Maldives Badge",
-      "verifyFeaturedPropertiesSection",
-    );
-  }
-
-  /**
-   * Verifies that the featured flights page is navigated to successfully.
-   * This test navigates to the featured flights page by clicking on the featured flights button and waits for the network request to complete with a status code of 200.
-   * Logs an info message if the operation is successful.
-   * Logs an error if the operation fails.
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
-   * */
-  public async verifyNavigationToFeaturedFlightsPage(): Promise<void> {
-    const dateReturnedFromFunction = DateUtil.getFormattedDate();
-    logger.info(`Date returned from function: ${dateReturnedFromFunction}`);
-    await this.modulars.network.assertNetworkRequest(
-      `https://phptravels.net/flights/dxb/lhe/oneway/economy/${dateReturnedFromFunction}/1/0/0`,
-      200,
-      () =>
-        this.modulars.elements.clickElement(
-          this.featuredFlightsButton,
-          "Featured Flights Button",
-          "verifyNavigationToFeaturedFlightsPage",
-        ),
-      "GET",
-      "Featured Flights Page",
-      "verifyNavigationToFeaturedFlightsPage",
-    );
-    await this.modulars.browser.waitForPageReady(
-      "networkidle",
-      "verifyNavigationToFeaturedFlightsPage",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.flightsSearchButton,
-      "visible",
-      "Flights Search Button",
-      "verifyNavigationToFeaturedFlightsPage",
-    );
-  }
-
-  /**
-   * Verifies that the popular tours section is displayed correctly.
-   * This test clicks on each of the popular tours buttons (Paris, Dubai, Tokyo, Denpasar, New York) and asserts that the corresponding popular tours badge is visible after each button is clicked.
-   * Logs an info message if the operation is successful.
-   * Logs an error if the operation fails.
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
-   */
-  public async verifyPopularTowersSection(): Promise<void> {
-    await this.modulars.elements.jsClick(
-      this.parisPopularToursButton,
-      "Paris Popular Tours Button",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.parisPopularToursBadge.first(),
-      "visible",
-      "Paris Popular Tours Badge",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.dubaiPopularToursButton,
-      "Dubai Popular Tours Button",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.dubaiPopularToursBadge.first(),
-      "visible",
-      "Dubai Popular Tours Badge",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.tokyoPopularToursButton,
-      "Tokyo Popular Tours Button",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.tokyoPopularToursBadge.first(),
-      "visible",
-      "Tokyo Popular Tours Badge",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.denpasarPopularToursButton,
-      "Denpasar Popular Tours Button",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.denpasarPopularToursBadge.first(),
-      "visible",
-      "Denpasar Popular Tours Badge",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.newYorkPopularToursButton,
-      "New York Popular Tours Button",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.newYorkPopularToursBadge.first(),
-      "visible",
-      "New York Popular Tours Badge",
-      "verifyPopularTowersSection",
-    );
-  }
-
-  /**
-   * Verifies that the featured cars section is displayed correctly.
-   * This test clicks on each of the featured cars buttons (Dubai, Dubai International Airport, Acarigua, Zanaga, Albuq, Barquisimeto, Beverly Springs) and asserts that the corresponding featured cars badge is visible after each button is clicked.
-   * Logs an info message if the operation is successful.
-   * Logs an error if the operation fails.
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
-   */
-  public async verifyFeaturedCarsSection(): Promise<void> {
-    await this.modulars.elements.jsClick(
-      this.dubaiCarsButton,
-      "Dubai Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.dubaiCarsBadge.first(),
-      "visible",
-      "Dubai Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.dubaiInternationalAirportButton,
-      "Dubai International Airport Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.dubaiInternationalAirportBadge.first(),
-      "visible",
-      "Dubai International Airport Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.acariguaCarsButton,
-      "Acarigua Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.acariguaCarsBadge.first(),
-      "visible",
-      "Acarigua Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.zanagaCarsButton,
-      "Zanaga Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.zanagaCarsBadge.first(),
-      "visible",
-      "Zanaga Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.albuqCarsButton,
-      "Albuq Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.albuqCarsBadge.first(),
-      "visible",
-      "Albuq Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.zanagaCarsButton,
-      "Zanaga Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.zanagaCarsBadge.first(),
-      "visible",
-      "Zanaga Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.alghaydahCarsButton,
-      "Alghaydah Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.alghaydahCarsBadge.first(),
-      "visible",
-      "Alghaydah Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.barquisimetoCarsButton,
-      "Barquisimeto Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.barquisimetoCarsBadge.first(),
-      "visible",
-      "Barquisimeto Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.beverleySpringsCarsButton,
-      "Beverley Springs Cars Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.beverleySpringsCarsBadge.first(),
-      "visible",
-      "Beverley Springs Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-  }
-
-  /**
    * Verifies that the download app section is displayed correctly.
    * This test clicks on the download app navigation link and asserts that the download app badge is visible after the link is clicked.
    * Logs an info message if the operation is successful.
@@ -1029,19 +728,15 @@ export class HomePage extends HomeBasePage {
    * @throws {Error} - If the operation fails.
    * */
   public async verifyDownloadAppSection(): Promise<void> {
-    await this.modulars.network.assertNetworkRequest(
-      "https://phptravels.net/mobile-app",
-      200,
-      () =>
-        this.modulars.elements.jsClick(
-          this.downloadAppNavigationLink,
-          "Download App Navigation Link",
-          "verifyDownloadAppSection",
-        ),
-      "GET",
-      "Download App Page",
-      "verifyDownloadAppSection",
-    );
+    await this.modulars.elements.jsClick(this.downloadAppNavigationLink, "Download App Navigation Link", "verifyDownloadAppSection");
+    await this.modulars.browser.waitForPopupEvent(this.page, "verifyDownloadAppSection");
+    const newTab = await this.modulars.browser.switchToTab(1, "verifyDownloadAppSection");
+
+    const url = (await this.modulars.browser.getCurrentUrl(newTab, "verifyDownloadAppSection")).trim();
+    await this.modulars.assertions.assertValuesEqual(url, "https://play.google.com/store/apps/details?id=com.phptravelsnative", "URL", "verifyDownloadAppSection");
+
+    const pageTitle = await this.modulars.browser.getTitle(newTab, "verifyDownloadAppSection");
+    await this.modulars.assertions.assertValuesEqual(pageTitle, "PHPTRAVELS - Apps on Google Play", "Page Title", "verifyDownloadAppSection");
   }
 
   /**

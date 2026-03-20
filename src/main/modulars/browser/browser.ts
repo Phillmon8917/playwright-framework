@@ -1,33 +1,31 @@
-import { Locator, Page, expect } from "@playwright/test";
+import { Page, expect } from "@playwright/test";
 import { logger } from "../../utils/logger/logger";
 
 export class BrowserActions {
   private readonly page: Page;
-  private readonly loadingIndicator: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.loadingIndicator = page.locator("#page-loader div");
   }
 
   /**
    * Navigates to the home page.
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
+   * @param {Page} page - The page to navigate.
+   * @returns {Promise<void>}
    */
-  public async loadThePage(currentPage: Page): Promise<void> {
-    await currentPage.goto("/", { waitUntil: "domcontentloaded" });
+  public async loadThePage(page: Page): Promise<void> {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
   }
 
   /**
-   * Reloads the current page.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "refresh".
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
+   * Reloads the given page.
+   * @param {Page} page - The page to reload.
+   * @param {string} [methodName]
+   * @returns {Promise<void>}
    */
-  public async refresh(methodName?: string): Promise<void> {
+  public async refresh(page: Page, methodName?: string): Promise<void> {
     try {
-      await this.page.reload();
+      await page.reload();
       logger.info(`${methodName ?? "refresh"} - Page reloaded successfully`);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -44,15 +42,19 @@ export class BrowserActions {
   }
 
   /**
-   * Navigates to the given URL.
-   * @param {string} url - The URL to navigate to.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "navigate".
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
-   * @throws {Error} - If the operation fails.
+   * Navigates to the given URL on the given page.
+   * @param {Page} page - The page to navigate.
+   * @param {string} url
+   * @param {string} [methodName]
+   * @returns {Promise<void>}
    */
-  public async navigate(url: string, methodName?: string): Promise<void> {
+  public async navigate(
+    page: Page,
+    url: string,
+    methodName?: string,
+  ): Promise<void> {
     try {
-      await this.page.goto(url);
+      await page.goto(url);
       logger.info(
         `${methodName ?? "navigate"} - Successfully navigated to ${url}`,
       );
@@ -71,14 +73,14 @@ export class BrowserActions {
   }
 
   /**
-   * Retrieves the current URL of the page.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "getCurrentUrl".
-   * @returns {Promise<string>} - A promise which resolves with the current URL of the page if the operation is successful, and rejects with an error if the operation fails.
-   * @throws {Error} - If the operation fails.
+   * Retrieves the current URL of the given page.
+   * @param {Page} page - The page to get the URL from.
+   * @param {string} [methodName]
+   * @returns {Promise<string>}
    */
-  public async getCurrentUrl(methodName?: string): Promise<string> {
+  public async getCurrentUrl(page: Page, methodName?: string): Promise<string> {
     try {
-      const url = this.page.url();
+      const url = page.url();
       logger.info(`${methodName ?? "getCurrentUrl"} - Current URL is ${url}`);
       return url;
     } catch (err: unknown) {
@@ -96,35 +98,37 @@ export class BrowserActions {
   }
 
   /**
-   * Retrieves the title of the page.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "getTitle".
+   * Retrieves the title of the given page.
+   * Waits for the title to become non-empty, up to 25s.
+   * Logs an info message if the operation is successful.
+   * Logs an error if the operation fails.
+   * @param {Page} page - The page to get the title from.
+   * @param {string} [methodName] - The name of the calling method.
    * @returns {Promise<string>} - A promise which resolves with the title of the page if the operation is successful, and rejects with an error if the operation fails.
-   * @throws {Error} - If the operation fails.
    */
-  public async getTitle(methodName?: string): Promise<string> {
+  public async getTitle(page: Page, methodName?: string): Promise<string> {
     try {
-      const title = await this.page.title();
+      // Poll until document.title is non-empty, up to 25s
+      await page.waitForFunction(() => document.title.trim().length > 0, {
+        timeout: 25000,
+      });
+
+      const title = await page.title();
       logger.info(`${methodName ?? "getTitle"} - Page title is "${title}"`);
       return title;
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        logger.error(
-          `${methodName ?? "getTitle"} - Failed to get page title: ${err.message}`,
-        );
-      } else {
-        logger.error(
-          `${methodName ?? "getTitle"} - Failed to get page title: ${String(err)}`,
-        );
-      }
+      const message = err instanceof Error ? err.message : String(err);
+      logger.error(
+        `${methodName ?? "getTitle"} - Page title did not become non-empty within 25s: ${message}`,
+      );
       throw err;
     }
   }
 
   /**
-   * Opens a new tab.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "newTab".
-   * @returns {Promise<Page>} - A promise which resolves with the new page if the operation is successful, and rejects with an error if the operation fails.
-   * @throws {Error} - If the operation fails.
+   * Opens a new tab in the same browser context.
+   * @param {string} [methodName]
+   * @returns {Promise<Page>}
    */
   public async newTab(methodName?: string): Promise<Page> {
     try {
@@ -147,14 +151,13 @@ export class BrowserActions {
 
   /**
    * Closes the given tab.
-   * @param {Page} tabPage - The page object of the tab to be closed.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "closeTab".
-   * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects with an error if the operation fails.
-   * @throws {Error} - If the operation fails.
+   * @param {Page} page - The page to close.
+   * @param {string} [methodName]
+   * @returns {Promise<void>}
    */
-  public async closeTab(tabPage: Page, methodName?: string): Promise<void> {
+  public async closeTab(page: Page, methodName?: string): Promise<void> {
     try {
-      await tabPage.close();
+      await page.close();
       logger.info(`${methodName ?? "closeTab"} - Tab closed successfully`);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -171,10 +174,9 @@ export class BrowserActions {
   }
 
   /**
-   * Retrieves all open tabs.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "getAllTabs".
-   * @returns {Promise<Page[]>} - A promise which resolves with an array of Page objects representing all open tabs.
-   * @throws {Error} - If the operation fails.
+   * Retrieves all open tabs in the current browser context.
+   * @param {string} [methodName]
+   * @returns {Promise<Page[]>}
    */
   public async getAllTabs(methodName?: string): Promise<Page[]> {
     try {
@@ -199,19 +201,16 @@ export class BrowserActions {
 
   /**
    * Switches to the tab at the given index.
-   * @param {number} index - The index of the tab to switch to.
-   * @param {string} [methodName] - The name of the calling method. Defaults to "switchToTab".
-   * @returns {Promise<Page>} - A promise which resolves with the Page object of the tab switched to.
-   * @throws {Error} - If the tab index is out of range or if the operation fails.
+   * @param {number} index
+   * @param {string} [methodName]
+   * @returns {Promise<Page>}
    */
   public async switchToTab(index: number, methodName?: string): Promise<Page> {
     try {
       const pages = this.page.context().pages();
-
       if (index < 0 || index >= pages.length) {
         throw new Error(`Tab index ${index} out of range`);
       }
-
       const targetPage = pages[index];
       logger.info(
         `${methodName ?? "switchToTab"} - Switched to tab index ${index}`,
@@ -232,18 +231,19 @@ export class BrowserActions {
   }
 
   /**
-   * Asserts that the current URL of the page matches the given expected URL.
-   * Logs an info message if the assertion is successful.
-   * Logs an error if the assertion fails.
-   * @param {string | RegExp} expected - The expected URL of the page.
-   * @param {string} [methodName] - The name of the calling method.
+   * Asserts that the URL of the given page matches the expected URL.
+   * @param {Page} page - The page to assert the URL on.
+   * @param {string | RegExp} expected
+   * @param {string} [methodName]
+   * @returns {Promise<void>}
    */
   public async assertUrl(
+    page: Page,
     expected: string | RegExp,
     methodName?: string,
   ): Promise<void> {
     try {
-      await expect(this.page).toHaveURL(expected);
+      await expect(page).toHaveURL(expected);
       logger.info(
         `${methodName ?? "assertUrl"} - URL matches expected: ${expected}`,
       );
@@ -262,18 +262,19 @@ export class BrowserActions {
   }
 
   /**
-   * Asserts that the title of the page matches the given expected title.
-   * Logs an info message if the assertion is successful.
-   * Logs an error if the assertion fails.
-   * @param {string | RegExp} expected - The expected title of the page.
-   * @param {string} [methodName] - The name of the calling method.
+   * Asserts that the title of the given page matches the expected title.
+   * @param {Page} page - The page to assert the title on.
+   * @param {string | RegExp} expected
+   * @param {string} [methodName]
+   * @returns {Promise<void>}
    */
   public async assertTitle(
+    page: Page,
     expected: string | RegExp,
     methodName?: string,
   ): Promise<void> {
     try {
-      await expect(this.page).toHaveTitle(expected);
+      await expect(page).toHaveTitle(expected);
       logger.info(
         `${methodName ?? "assertTitle"} - Page title matches expected: ${expected}`,
       );
@@ -292,14 +293,19 @@ export class BrowserActions {
   }
 
   /**
-   * Waits for the loading indicator to disappear from the page.
-   * Logs an info message when the loading indicator has disappeared.
-   * @returns {Promise<void>} - A promise which resolves when the loading indicator has disappeared.
+   * Waits for the loading indicator to disappear on the given page.
+   * @param {Page} page - The page to wait on.
+   * @param {string} methodName
+   * @returns {Promise<void>}
    */
-  public async waitForPageLoaderToDisappear(methodName: string): Promise<void> {
+  public async waitForPageLoaderToDisappear(
+    page: Page,
+    methodName: string,
+  ): Promise<void> {
+    const loadingIndicator = page.locator("#page-loader div");
     try {
-      if ((await this.loadingIndicator.count()) > 0) {
-        await this.loadingIndicator
+      if ((await loadingIndicator.count()) > 0) {
+        await loadingIndicator
           .first()
           .waitFor({ state: "hidden", timeout: 15000 });
         logger.info(`${methodName} - Loader disappeared (hidden or detached)`);
@@ -321,19 +327,19 @@ export class BrowserActions {
   }
 
   /**
-   * Waits for the page to reach a certain state of readiness.
-   * Logs an info message when the page has reached the given state.
-   * @param {string} state - The state of readiness to wait for. Can be "domcontentloaded", "load", or "networkidle". Defaults to "networkidle".
-   * @param {string} [methodName] - The name of the calling method.
-   * @returns {Promise<void>} - A promise which resolves when the page has reached the given state.
-   * @throws {Error} - If the operation fails.
+   * Waits for the given page to reach a certain state of readiness.
+   * @param {Page} page - The page to wait on.
+   * @param {"domcontentloaded" | "load" | "networkidle"} [state] - Defaults to "networkidle".
+   * @param {string} [methodName]
+   * @returns {Promise<void>}
    */
   public async waitForPageReady(
+    page: Page,
     state: "domcontentloaded" | "load" | "networkidle" = "networkidle",
     methodName?: string,
   ): Promise<void> {
     try {
-      await this.page.waitForLoadState(state);
+      await page.waitForLoadState(state);
       logger.info(
         `${methodName ?? "waitForPageReady"} - Page ready with state: ${state}`,
       );
@@ -345,6 +351,33 @@ export class BrowserActions {
       } else {
         logger.error(
           `${methodName ?? "waitForPageReady"} - Failed waiting for page ready (${state}): ${String(err)}`,
+        );
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * Waits for a popup event to occur on the given page.
+   * @param {Page} page - The page to wait on.
+   * @param {string} methodName
+   * @returns {Promise<void>}
+   */
+  public async waitForPopupEvent(
+    page: Page,
+    methodName: string,
+  ): Promise<void> {
+    try {
+      await page.waitForEvent("popup", { timeout: 15000 });
+      logger.info(`${methodName} - Popup event detected within 15s`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(
+          `${methodName} - Popup event did not occur within 15s: ${err.message}`,
+        );
+      } else {
+        logger.error(
+          `${methodName} - Popup event did not occur within 15s: ${String(err)}`,
         );
       }
       throw err;

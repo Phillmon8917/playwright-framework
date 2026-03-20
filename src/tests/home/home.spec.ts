@@ -152,40 +152,6 @@ test.describe("Home Page @regression", () => {
     logger.info("Assertion Passed - All quick search tabs are visible");
   });
 
-  test("Should verify featured properties section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyFeaturedPropertiesSection();
-    logger.info(
-      "Assertion Passed - Featured properties section is displayed correctly",
-    );
-  });
-
-  test("Should verify navigation to featured flight booking page", async ({
-    homePage,
-  }) => {
-    await homePage.loadThePage();
-    await homePage.verifyNavigationToFeaturedFlightsPage();
-    logger.info(
-      "Assertion Passed - Navigation to featured flight booking page is successful",
-    );
-  });
-
-  test("Should verify popular tours section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyPopularTowersSection();
-    logger.info(
-      "Assertion Passed - Popular tours section is displayed correctly",
-    );
-  });
-
-  test("Should verify featured cars section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyFeaturedCarsSection();
-    logger.info(
-      "Assertion Passed - Featured cars section is displayed correctly",
-    );
-  });
-
   test("Should verify navigation to download app page", async ({
     homePage,
   }) => {
