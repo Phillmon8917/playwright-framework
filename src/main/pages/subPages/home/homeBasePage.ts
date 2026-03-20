@@ -299,7 +299,7 @@ export class HomeBasePage extends BasePage {
 
     //others
     this.downloadAppNavigationLink = page.getByRole("link", {
-      name: "Download App",
+      name: "Google Play",
     });
     this.barcelonaFeaturedPropertyButton = page.getByRole("button", {
       name: "Barcelona",

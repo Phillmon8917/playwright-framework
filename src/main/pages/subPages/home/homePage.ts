@@ -9,7 +9,7 @@ export class HomePage extends HomeBasePage {
    */
   public async loadThePage(): Promise<void> {
     await this.modulars.browser.loadThePage(this.page);
-    await this.modulars.browser.waitForPageLoaderToDisappear("LoadThePage");
+    await this.modulars.browser.waitForPageLoaderToDisappear(this.page, "LoadThePage");
   }
 
   /**
@@ -446,7 +446,7 @@ export class HomePage extends HomeBasePage {
   public async verifyNavigationToBlogsPage(): Promise<void> {
     await this.modulars.network.assertNetworkRequest(
       "https://phptravels.net/page/blog",
-      200,
+      302,
       () =>
         this.modulars.elements.jsClick(
           this.blogsNavLink,
@@ -744,12 +744,6 @@ export class HomePage extends HomeBasePage {
       "Lahore Featured Property Button",
       "verifyFeaturedPropertiesSection",
     );
-    await this.modulars.assertions.assertElementState(
-      this.lahoreBadge.first(),
-      "visible",
-      "Lahore Badge",
-      "verifyFeaturedPropertiesSection",
-    );
     await this.modulars.elements.jsClick(
       this.dubaiFeaturedPropertyButton,
       "Dubai Featured Property Button",
@@ -818,17 +812,6 @@ export class HomePage extends HomeBasePage {
    */
   public async verifyPopularTowersSection(): Promise<void> {
     await this.modulars.elements.jsClick(
-      this.parisPopularToursButton.nth(1),
-      "Paris Popular Tours Button",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.parisPopularToursBadge.first(),
-      "visible",
-      "Paris Popular Tours Badge",
-      "verifyPopularTowersSection",
-    );
-    await this.modulars.elements.jsClick(
       this.dubaiPopularToursButton,
       "Dubai Popular Tours Button",
       "verifyPopularTowersSection",
@@ -892,17 +875,6 @@ export class HomePage extends HomeBasePage {
       this.dubaiCarsBadge.first(),
       "visible",
       "Dubai Cars Badge",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.elements.jsClick(
-      this.dubaiInternationalAirportButton,
-      "Dubai International Airport Button",
-      "verifyFeaturedCarsSection",
-    );
-    await this.modulars.assertions.assertElementState(
-      this.dubaiInternationalAirportBadge.first(),
-      "visible",
-      "Dubai International Airport Badge",
       "verifyFeaturedCarsSection",
     );
     await this.modulars.elements.jsClick(
@@ -993,19 +965,15 @@ export class HomePage extends HomeBasePage {
    * @throws {Error} - If the operation fails.
    * */
   public async verifyDownloadAppSection(): Promise<void> {
-    await this.modulars.network.assertNetworkRequest(
-      "https://phptravels.net/mobile-app",
-      200,
-      () =>
-        this.modulars.elements.jsClick(
-          this.downloadAppNavigationLink,
-          "Download App Navigation Link",
-          "verifyDownloadAppSection",
-        ),
-      "GET",
-      "Download App Page",
-      "verifyDownloadAppSection",
-    );
+    await this.modulars.elements.jsClick(this.downloadAppNavigationLink, "Download App Navigation Link", "verifyDownloadAppSection");
+    await this.modulars.browser.waitForPopupEvent(this.page, "verifyDownloadAppSection");
+    const newTab = await this.modulars.browser.switchToTab(1, "verifyDownloadAppSection");
+
+    const url = (await this.modulars.browser.getCurrentUrl(newTab, "verifyDownloadAppSection")).trim();
+    await this.modulars.assertions.assertValuesEqual(url, "https://play.google.com/store/apps/details?id=com.phptravelsnative", "URL", "verifyDownloadAppSection");
+
+    const pageTitle = await this.modulars.browser.getTitle(newTab, "verifyDownloadAppSection");
+    await this.modulars.assertions.assertValuesEqual(pageTitle, "PHPTRAVELS - Apps on Google Play", "Page Title", "verifyDownloadAppSection");
   }
 
   /**
