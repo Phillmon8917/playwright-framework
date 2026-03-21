@@ -84,12 +84,12 @@ export default class MonthlyReporter implements Reporter {
       title: test.title,
       fullTitle: test.titlePath().join(" > "),
       file: test.location.file,
-      suite: test.parent.title || "root", 
+      suite: test.parent.title || "root",
       status,
       duration: result.duration,
       retries: result.retry,
-      error: result.errors[0]?.message, 
-      tags: test.annotations.map((a) => a.type), 
+      error: result.errors[0]?.message,
+      tags: test.annotations.map((a) => a.type),
       isNew: !this.previousTestIds.has(test.id),
     });
   }
@@ -97,9 +97,10 @@ export default class MonthlyReporter implements Reporter {
   /**
    * Called after all tests have finished execution.
    * Collects test results, appends new run data to the store, and logs a summary of the run.
-   * Environment is auto-derived from the branch name (main = qa, develop = develop) unless TEST_ENV is set.
-   * Branch is resolved from git branch, then falls back to git sha, and finally falls back to "main".
-   * Commit SHA is resolved from git, then falls back to github sha, and finally falls back to "unknown".
+   * Environment always matches branch: qa branch = qa env, develop branch = develop env.
+   * TEST_ENV can override if needed.
+   * Branch is resolved from CI env vars first, then falls back to git.
+   * Commit SHA is resolved from CI env vars first, then falls back to git.
    * @returns A promise that resolves when the run data has been saved.
    */
   async onEnd(): Promise<void> {
@@ -116,28 +117,27 @@ export default class MonthlyReporter implements Reporter {
     const timedOut = this.results.filter((r) => r.status === "timedOut").length;
     const newTests = this.results.filter((r) => r.isNew).length;
 
-    // Branch: env var takes priority (CI pipelines), then fall back to git
     const branch =
       process.env.GIT_BRANCH ||
       process.env.GITHUB_REF_NAME ||
       this.getCurrentBranch();
 
-    const allowedBranches = ["main", "develop", "qa"];
+    const allowedBranches = ["qa", "develop"];
     const resolvedBranch = allowedBranches.includes(branch)
       ? branch
       : branch.startsWith("feature/") ||
           branch.startsWith("bugfix/") ||
           branch.startsWith("hotfix/")
         ? branch
-        : "main";
+        : "qa";
 
     const commitSha =
       process.env.GIT_SHA ||
       process.env.GITHUB_SHA?.slice(0, 7) ||
       this.getCurrentCommitSha();
-      
+
     const environment =
-      process.env.TEST_ENV ?? (resolvedBranch === "main" ? "qa" : "develop");
+      process.env.TEST_ENV ?? (resolvedBranch === "qa" ? "qa" : "develop");
 
     const run: RunResult = {
       runId: uuidv4(),
