@@ -12,7 +12,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
-  reporter: [["html"], ["list"]],
+  reporter: [["html"], ["list"], ["./src/main/report/reporter.ts"]],
   use: {
     baseURL: process.env.BASE_URL || "https://phptravels.net/",
     trace: process.env.CI ? "retain-on-failure" : "off",

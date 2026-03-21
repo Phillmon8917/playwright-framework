@@ -1,13 +1,13 @@
 import { Page } from "@playwright/test";
-import { ElementAssertions } from "../../modulars/assertions/assertions";
-import { BrowserActions } from "../../modulars/browser/browser";
-import { CalendarNavigator } from "../../modulars/calendar/calenderNavigator";
-import { DropdownActions } from "../../modulars/dropdowns/dropdown";
-import { ElementActions } from "../../modulars/elements/element";
-import { IframeActions } from "../../modulars/iframe/iframe";
-import { KeyboardActions } from "../../modulars/keyboard/keyboard";
-import { NetworkAssertions } from "../../modulars/network/network";
-import { ToggleActions } from "../../modulars/toggle/toggle";
+import { ElementAssertions } from "../../modulars/assertions/assertions.ts";
+import { BrowserActions } from "../../modulars/browser/browser.ts";
+import { CalendarNavigator } from "../../modulars/calendar/calenderNavigator.ts";
+import { DropdownActions } from "../../modulars/dropdowns/dropdown.ts";
+import { ElementActions } from "../../modulars/elements/element.ts";
+import { IframeActions } from "../../modulars/iframe/iframe.ts";
+import { KeyboardActions } from "../../modulars/keyboard/keyboard.ts";
+import { NetworkAssertions } from "../../modulars/network/network.ts";
+import { ToggleActions } from "../../modulars/toggle/toggle.ts";
 
 export class ActionsContainer {
   readonly assertions: ElementAssertions;
