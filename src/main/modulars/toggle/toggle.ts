@@ -1,5 +1,5 @@
 import { Locator, expect } from "@playwright/test";
-import { logger } from "../../utils/logger/logger";
+import { logger } from "../../utils/logger/logger.ts";
 
 export class ToggleActions {
   /**

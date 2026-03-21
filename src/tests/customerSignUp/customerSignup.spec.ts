@@ -1,7 +1,7 @@
-import { test } from "../../../src/main/fixtures/fixture";
+import { test } from "../../../src/main/fixtures/fixture.ts";
 import { ai } from "@zerostep/playwright";
-import { FakerHelper } from "../../main/utils/faker/fakerHelper";
-import { logger } from "../../main/utils/logger/logger";
+import { FakerHelper } from "../../main/utils/faker/fakerHelper.ts";
+import { logger } from "../../main/utils/logger/logger.ts";
 
 test.describe("Customer Signup Page @regression", () => {
   test("Verify successful customer signup", async ({
