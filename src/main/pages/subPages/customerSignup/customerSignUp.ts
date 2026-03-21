@@ -1,6 +1,6 @@
-import { ValidationHelper } from "../../../utils/validation/validationHelper";
-import { CustomerSignupOptions } from "./customerSignup.type";
-import { CustomerSignupBasePage } from "./customerSignupBasePage";
+import { ValidationHelper } from "../../../utils/validation/validationHelper.ts";
+import { CustomerSignupOptions } from "./customerSignup.type.ts";
+import { CustomerSignupBasePage } from "./customerSignupBasePage.ts";
 
 export class CustomerSignupPage extends CustomerSignupBasePage {
   /**

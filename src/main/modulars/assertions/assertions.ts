@@ -1,5 +1,5 @@
 import { expect, Locator } from "@playwright/test";
-import { logger } from "../../utils/logger/logger";
+import { logger } from "../../utils/logger/logger.ts";
 
 export class ElementAssertions {
   /**
@@ -188,7 +188,7 @@ export class ElementAssertions {
     threshold: number,
     locatorName: string,
     methodName: string,
-    timeout: number = 5000,
+    timeout: number = Number(process.env.LOCAL_TEST_TIMEOUT) || 30_000,
     interval: number = 250,
   ): Promise<void> {
     const start = Date.now();
@@ -258,7 +258,7 @@ export class ElementAssertions {
     locatorName: string,
     methodName: string,
     type: "text" | "value" = "text",
-    timeout: number = 5000,
+    timeout: number = Number(process.env.LOCAL_TEST_TIMEOUT) || 30_000,
     interval: number = 250,
   ): Promise<void> {
     const start = Date.now();

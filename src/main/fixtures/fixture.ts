@@ -1,6 +1,6 @@
 import { test as base } from "@playwright/test";
-import { HomePage } from "../pages/subPages/home/homePage";
-import { CustomerSignupPage } from "../pages/subPages/customerSignup/customerSignUp";
+import { HomePage } from "../pages/subPages/home/homePage.ts";
+import { CustomerSignupPage } from "../pages/subPages/customerSignup/customerSignUp.ts";
 
 export const test = base.extend<{
   homePage: HomePage;

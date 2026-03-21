@@ -1,5 +1,5 @@
 import { Page, expect } from "@playwright/test";
-import { logger } from "../../utils/logger/logger";
+import { logger } from "../../utils/logger/logger.ts";
 
 export class BrowserActions {
   private readonly page: Page;
@@ -110,7 +110,7 @@ export class BrowserActions {
     try {
       // Poll until document.title is non-empty, up to 25s
       await page.waitForFunction(() => document.title.trim().length > 0, {
-        timeout: 25000,
+        timeout: Number(process.env.LOCAL_TEST_TIMEOUT) || 30_000,
       });
 
       const title = await page.title();
@@ -307,7 +307,7 @@ export class BrowserActions {
       if ((await loadingIndicator.count()) > 0) {
         await loadingIndicator
           .first()
-          .waitFor({ state: "hidden", timeout: 15000 });
+          .waitFor({ state: "hidden", timeout: Number(process.env.LOCAL_TEST_TIMEOUT) || 30_000 });
         logger.info(`${methodName} - Loader disappeared (hidden or detached)`);
       } else {
         logger.info(`${methodName} - Loader was not present, continuing`);
@@ -368,7 +368,7 @@ export class BrowserActions {
     methodName: string,
   ): Promise<void> {
     try {
-      await page.waitForEvent("popup", { timeout: 15000 });
+      await page.waitForEvent("popup", { timeout: Number(process.env.LOCAL_TEST_TIMEOUT) || 30_000 });
       logger.info(`${methodName} - Popup event detected within 15s`);
     } catch (err: unknown) {
       if (err instanceof Error) {

@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { ActionsContainer } from "../basePage/actionContainer";
+import { ActionsContainer } from "../basePage/actionContainer.ts";
 
 export class BasePage {
   protected readonly page: Page;
