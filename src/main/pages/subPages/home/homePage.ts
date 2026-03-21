@@ -1,5 +1,5 @@
-import { logger } from "../../../utils/logger/logger";
-import { HomeBasePage } from "./homeBasePage";
+import { logger } from "../../../utils/logger/logger.ts";
+import { HomeBasePage } from "./homeBasePage.ts";
 
 export class HomePage extends HomeBasePage {
   /**

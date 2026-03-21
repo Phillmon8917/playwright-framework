@@ -1,5 +1,5 @@
 import { Page, Locator } from "@playwright/test";
-import { BasePage } from "../../basePage/basePage";
+import { BasePage } from "../../basePage/basePage.ts";
 
 export class HomeBasePage extends BasePage {
   protected readonly logo: Locator;
@@ -259,9 +259,7 @@ export class HomeBasePage extends BasePage {
       name: "Google Play",
     });
     // Quick Search Tabs
-    this.visaQuickSearchTab = page.getByRole("tab", {
-      name: "card_membership Visa",
-    });
+    this.visaQuickSearchTab = page.getByRole("tab", { name: "Visa" });
     this.toursQuickSearchTab = page.getByRole("tab", { name: "explore Tours" });
     this.carsQuickSearchTab = page.getByRole("tab", {
       name: "directions_car Cars",

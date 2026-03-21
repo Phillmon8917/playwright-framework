@@ -1,5 +1,5 @@
-import { test } from "../../../src/main/fixtures/fixture";
-import { logger } from "../../main/utils/logger/logger";
+import { test } from "../../../src/main/fixtures/fixture.ts";
+import { logger } from "../../main/utils/logger/logger.ts";
 
 test.describe("Home Page @regression", () => {
   test("Verify Home Page is loaded", async ({ homePage }) => {
