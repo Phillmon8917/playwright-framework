@@ -5,15 +5,13 @@ import {
   TestCase,
   TestResult as PWTestResult,
 } from "@playwright/test/reporter";
-import fs from "fs";
-import path from "path";
+import { appendRun } from "./store.js";
 import { execSync } from "child_process";
 import { v4 as uuidv4 } from "uuid";
 import { RunResult, TestResult } from "./types.js";
 import { logger } from "../utils/logger/logger.ts";
 
 const knownTests: Set<string> = new Set();
-const reportDir = "playwright-report";
 
 export default class MonthlyReporter implements Reporter {
   private results: TestResult[] = [];
@@ -74,10 +72,7 @@ export default class MonthlyReporter implements Reporter {
 
   async onEnd(): Promise<void> {
     const now = new Date();
-    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-      2,
-      "0",
-    )}`;
+    const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     const date = now.toISOString().split("T")[0];
 
     const passed = this.results.filter((r) => r.status === "passed").length;
@@ -128,33 +123,7 @@ export default class MonthlyReporter implements Reporter {
       tests: this.results,
     };
 
-    if (!fs.existsSync(reportDir)) {
-      fs.mkdirSync(reportDir, { recursive: true });
-    }
-
-    const monthlyFile = path.join(reportDir, `${month}.json`);
-    let runs: RunResult[] = [];
-    if (fs.existsSync(monthlyFile)) {
-      try {
-        runs = JSON.parse(fs.readFileSync(monthlyFile, "utf-8"));
-      } catch {
-        runs = [];
-      }
-    }
-    runs.push(run);
-    fs.writeFileSync(monthlyFile, JSON.stringify(runs, null, 2));
-
-    const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const prevMonthName = `${prevMonth.getFullYear()}-${String(
-      prevMonth.getMonth() + 1,
-    ).padStart(2, "0")}`;
-    const files = fs.readdirSync(reportDir).filter((f) => f.endsWith(".json"));
-    for (const file of files) {
-      const base = path.basename(file, ".json");
-      if (base !== month && base !== prevMonthName) {
-        fs.unlinkSync(path.join(reportDir, file));
-      }
-    }
+    appendRun(run);
 
     logger.info(
       `Run appended ${runId} | Month: ${month} | Branch: ${resolvedBranch} | Env: ${environment} | Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,

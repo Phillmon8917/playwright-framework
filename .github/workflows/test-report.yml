@@ -48,10 +48,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run full test report pipeline
-        run: |
-          npm run lint
-          npx playwright test
-          node scripts/style-report.js
+        run: npm run test:report
 
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
