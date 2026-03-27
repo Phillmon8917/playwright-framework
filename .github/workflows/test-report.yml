@@ -33,6 +33,14 @@ jobs:
           node-version: "20"
           cache: "npm"
 
+      # Restore previous monthly JSON so reporter can append
+      - name: Download previous report
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+        continue-on-error: true
+
       - name: Install dependencies
         run: npm ci
 
@@ -40,28 +48,20 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run full test report pipeline
-        run: |
-          npm run lint
-          npx playwright test
-          node scripts/style-report.js
+        run: npm run test:report
 
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
 
-      # ── Assemble GitHub Pages output ──────────────────────────────────────
       - name: Assemble Pages directory
         if: always()
         run: |
           mkdir -p gh-pages/test-results
           mkdir -p gh-pages/monthly-report
 
-          # Copy Playwright report
           cp -r playwright-report/. gh-pages/test-results/
-
-          # Copy monthly QA report
           cp src/dist/report.html gh-pages/monthly-report/index.html
 
-          # Create dashboard index
           cat > gh-pages/index.html << 'HTML'
           <!DOCTYPE html>
           <html lang="en">
@@ -216,11 +216,12 @@ jobs:
         if: always()
         run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
+      # Upload updated monthly JSON so next run can append
       - name: Upload test results artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results
+          name: playwright-report
           path: playwright-report/
 
       - name: Upload monthly report artifact

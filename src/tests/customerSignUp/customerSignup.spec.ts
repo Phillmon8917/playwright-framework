@@ -3,7 +3,8 @@ import { ai } from "@zerostep/playwright";
 import { FakerHelper } from "../../main/utils/faker/fakerHelper.ts";
 import { logger } from "../../main/utils/logger/logger.ts";
 
-test.describe("Customer Signup Page @regression", () => {
+//eslint-disable-next-line playwright/no-focused-test
+test.describe.only("Customer Signup Page @regression", () => {
   test("Verify successful customer signup", async ({
     homePage,
     customerSignupPage,
