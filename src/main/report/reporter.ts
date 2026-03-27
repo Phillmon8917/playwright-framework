@@ -20,32 +20,18 @@ export default class MonthlyReporter implements Reporter {
   private startTime!: number;
   private previousTestIds: Set<string> = new Set();
 
-  /**
-   * Called when the test run begins. Records the start time and initial test IDs.
-   * @param _config The full configuration object.
-   * @param suite The suite being executed.
-   */
   onBegin(_config: FullConfig, suite: Suite): void {
     this.startTime = Date.now();
     this.previousTestIds = new Set(knownTests);
     this.collectTestIds(suite);
   }
 
-  /**
-   * Recursively traverse the suite and collect all test IDs.
-   * @param suite The suite to traverse.
-   */
   private collectTestIds(suite: Suite): void {
     for (const child of suite.allTests()) {
       knownTests.add(child.id);
     }
   }
 
-  /**
-   * Attempts to get the current branch of the repository.
-   * Returns the abbreviated ref name (e.g. "main") if successful, or "unknown" if not.
-   * @returns {string} The current branch name, or "unknown" if not found.
-   */
   private getCurrentBranch(): string {
     try {
       return execSync("git rev-parse --abbrev-ref HEAD", {
@@ -56,11 +42,6 @@ export default class MonthlyReporter implements Reporter {
     }
   }
 
-  /**
-   * Attempts to get the current commit SHA of the repository.
-   * Returns the 7-character short SHA if successful, or "unknown" if not.
-   * @returns {string} The current commit SHA, or "unknown" if not found.
-   */
   private getCurrentCommitSha(): string {
     try {
       return execSync("git rev-parse --short HEAD", {
@@ -71,26 +52,6 @@ export default class MonthlyReporter implements Reporter {
     }
   }
 
-  /**
-   * Collects test results for the current test run.
-   *
-   * @param test - The test case that has finished execution.
-   * @param result - The result of the test execution.
-   *
-   * The test results are accumulated in the `results` property of the reporter.
-   * The `results` property is an array of objects with the following properties:
-   * - `id`: The unique ID of the test case.
-   * - `title`: The title of the test case.
-   * - `fullTitle`: The full title of the test case, including its parent suite.
-   * - `file`: The file where the test case is located.
-   * - `suite`: The title of the parent suite of the test case.
-   * - `status`: The status of the test execution.
-   * - `duration`: The duration of the test execution in milliseconds.
-   * - `retries`: The number of times the test was retried.
-   * - `error`: The error message of the test execution if it failed.
-   * - `tags`: An array of tags associated with the test case.
-   * - `isNew`: A boolean indicating whether the test case is new or not.
-   */
   onTestEnd(test: TestCase, result: PWTestResult): void {
     type Status = "passed" | "failed" | "skipped" | "timedOut";
     const status: Status =
@@ -111,12 +72,6 @@ export default class MonthlyReporter implements Reporter {
     });
   }
 
-  /**
-   * Saves the run results to a file in the "playwright-report" directory.
-   * The file name is in the format of "run-{runId}.json".
-   * The saved run results include the run ID, timestamp, date, month, branch, commit SHA, environment, total tests, passed tests, failed tests, skipped tests, timed out tests, duration, new tests, and test results.
-   * The results are saved in a JSON format with indentation of 2 spaces.
-   */
   async onEnd(): Promise<void> {
     const now = new Date();
     const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
@@ -177,12 +132,32 @@ export default class MonthlyReporter implements Reporter {
       fs.mkdirSync(reportDir, { recursive: true });
     }
 
-    const filePath = path.join(reportDir, `run-${runId}.json`);
+    const monthlyFile = path.join(reportDir, `${month}.json`);
+    let runs: RunResult[] = [];
+    if (fs.existsSync(monthlyFile)) {
+      try {
+        runs = JSON.parse(fs.readFileSync(monthlyFile, "utf-8"));
+      } catch {
+        runs = [];
+      }
+    }
+    runs.push(run);
+    fs.writeFileSync(monthlyFile, JSON.stringify(runs, null, 2));
 
-    fs.writeFileSync(filePath, JSON.stringify(run, null, 2));
+    const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevMonthName = `${prevMonth.getFullYear()}-${String(
+      prevMonth.getMonth() + 1,
+    ).padStart(2, "0")}`;
+    const files = fs.readdirSync(reportDir).filter((f) => f.endsWith(".json"));
+    for (const file of files) {
+      const base = path.basename(file, ".json");
+      if (base !== month && base !== prevMonthName) {
+        fs.unlinkSync(path.join(reportDir, file));
+      }
+    }
 
     logger.info(
-      `Run saved ${runId} | Branch: ${resolvedBranch} | Env: ${environment} | Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,
+      `Run appended ${runId} | Month: ${month} | Branch: ${resolvedBranch} | Env: ${environment} | Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,
     );
   }
 }
