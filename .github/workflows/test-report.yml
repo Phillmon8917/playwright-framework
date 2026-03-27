@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -34,11 +34,11 @@ jobs:
           cache: "npm"
 
       # Restore previous monthly JSON so reporter can append
-      - name: Download previous report
+      - name: Download previous monthly data
         uses: actions/download-artifact@v4
         with:
-          name: playwright-report
-          path: playwright-report
+          name: monthly-data
+          path: data
         continue-on-error: true
 
       - name: Install dependencies
@@ -59,9 +59,13 @@ jobs:
           mkdir -p gh-pages/test-results
           mkdir -p gh-pages/monthly-report
 
+          # Copy Playwright HTML report
           cp -r playwright-report/. gh-pages/test-results/
+
+          # Copy monthly QA report
           cp src/dist/report.html gh-pages/monthly-report/index.html
 
+          # Create dashboard index
           cat > gh-pages/index.html << 'HTML'
           <!DOCTYPE html>
           <html lang="en">
@@ -217,12 +221,12 @@ jobs:
         run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
       # Upload updated monthly JSON so next run can append
-      - name: Upload test results artifact
+      - name: Upload monthly data artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: monthly-data
+          path: data/
 
       - name: Upload monthly report artifact
         uses: actions/upload-artifact@v4
@@ -233,7 +237,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         if: always()
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: gh-pages/
