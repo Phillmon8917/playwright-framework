@@ -39,25 +39,16 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run Playwright tests
-        run: npx playwright test
-
-      - name: Style Playwright HTML report
-        run: node scripts/style-report.js
+      - name: Run full test report pipeline
+        run: |
+          npm run lint
+          npx playwright test
+          node scripts/style-report.js
 
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
 
       # ── Assemble GitHub Pages output ──────────────────────────────────────
-      # Structure:
-      #   gh-pages/
-      #     index.html          ← dashboard with links to both reports
-      #     test-results/       ← Playwright HTML report
-      #     monthly-report/     ← monthly QA report
-
       - name: Assemble Pages directory
         if: always()
         run: |
