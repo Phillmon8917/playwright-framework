@@ -33,12 +33,12 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      # Restore previous monthly JSON so reporter can append
+      # Restore previous monthly JSON so reporter can append to existing runs
       - name: Download previous monthly data
         uses: actions/download-artifact@v4
         with:
           name: monthly-data
-          path: data
+          path: data/
         continue-on-error: true
 
       - name: Install dependencies
@@ -47,11 +47,24 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run full test report pipeline
-        run: npm run test:report
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Style Playwright HTML report
+        run: node scripts/style-report.js
 
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
+
+      # ── Assemble GitHub Pages output ──────────────────────────────────────
+      # Structure:
+      #   gh-pages/
+      #     index.html          ← dashboard with links to both reports
+      #     test-results/       ← Playwright HTML report
+      #     monthly-report/     ← monthly QA report
 
       - name: Assemble Pages directory
         if: always()
@@ -220,13 +233,14 @@ jobs:
         if: always()
         run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
-      # Upload updated monthly JSON so next run can append
+      # Upload updated monthly JSON so next run can append to it
       - name: Upload monthly data artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: monthly-data
           path: data/
+          overwrite: true
 
       - name: Upload monthly report artifact
         uses: actions/upload-artifact@v4
@@ -234,6 +248,7 @@ jobs:
         with:
           name: monthly-report
           path: src/dist/report.html
+          overwrite: true
 
       - name: Deploy to GitHub Pages
         if: always()
