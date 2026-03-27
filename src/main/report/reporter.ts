@@ -5,34 +5,35 @@ import {
   TestCase,
   TestResult as PWTestResult,
 } from "@playwright/test/reporter";
+import fs from "fs";
+import path from "path";
 import { execSync } from "child_process";
 import { v4 as uuidv4 } from "uuid";
 import { RunResult, TestResult } from "./types.js";
-import { appendRun } from "./store.js";
 import { logger } from "../utils/logger/logger.ts";
 
 const knownTests: Set<string> = new Set();
+const reportDir = "playwright-report";
 
-/**
- * MonthlyReporter is a custom Playwright reporter.
- * It collects test results, tracks new tests, and persists
- * run data for monthly reporting.
- */
 export default class MonthlyReporter implements Reporter {
   private results: TestResult[] = [];
   private startTime!: number;
   private previousTestIds: Set<string> = new Set();
 
+  /**
+   * Called when the test run begins. Records the start time and initial test IDs.
+   * @param _config The full configuration object.
+   * @param suite The suite being executed.
+   */
   onBegin(_config: FullConfig, suite: Suite): void {
     this.startTime = Date.now();
-    this.previousTestIds = knownTests;
+    this.previousTestIds = new Set(knownTests);
     this.collectTestIds(suite);
   }
 
   /**
-   * Collects all test IDs from the given suite and adds them to the knownTests set.
-   * This is used to detect new tests vs the previous known set.
-   * @param suite - The suite to collect test IDs from.
+   * Recursively traverse the suite and collect all test IDs.
+   * @param suite The suite to traverse.
    */
   private collectTestIds(suite: Suite): void {
     for (const child of suite.allTests()) {
@@ -41,8 +42,9 @@ export default class MonthlyReporter implements Reporter {
   }
 
   /**
-   * Reads the current git branch from the repository.
-   * Falls back to 'unknown' if git is not available or the command fails.
+   * Attempts to get the current branch of the repository.
+   * Returns the abbreviated ref name (e.g. "main") if successful, or "unknown" if not.
+   * @returns {string} The current branch name, or "unknown" if not found.
    */
   private getCurrentBranch(): string {
     try {
@@ -55,8 +57,9 @@ export default class MonthlyReporter implements Reporter {
   }
 
   /**
-   * Reads the current git commit SHA (short, 7 chars).
-   * Falls back to 'unknown' if git is not available or the command fails.
+   * Attempts to get the current commit SHA of the repository.
+   * Returns the 7-character short SHA if successful, or "unknown" if not.
+   * @returns {string} The current commit SHA, or "unknown" if not found.
    */
   private getCurrentCommitSha(): string {
     try {
@@ -69,10 +72,24 @@ export default class MonthlyReporter implements Reporter {
   }
 
   /**
-   * Called after each test has finished execution.
-   * This is used to collect test results and store them in the reporter.
+   * Collects test results for the current test run.
+   *
    * @param test - The test case that has finished execution.
-   * @param result - The result of the test.
+   * @param result - The result of the test execution.
+   *
+   * The test results are accumulated in the `results` property of the reporter.
+   * The `results` property is an array of objects with the following properties:
+   * - `id`: The unique ID of the test case.
+   * - `title`: The title of the test case.
+   * - `fullTitle`: The full title of the test case, including its parent suite.
+   * - `file`: The file where the test case is located.
+   * - `suite`: The title of the parent suite of the test case.
+   * - `status`: The status of the test execution.
+   * - `duration`: The duration of the test execution in milliseconds.
+   * - `retries`: The number of times the test was retried.
+   * - `error`: The error message of the test execution if it failed.
+   * - `tags`: An array of tags associated with the test case.
+   * - `isNew`: A boolean indicating whether the test case is new or not.
    */
   onTestEnd(test: TestCase, result: PWTestResult): void {
     type Status = "passed" | "failed" | "skipped" | "timedOut";
@@ -95,13 +112,10 @@ export default class MonthlyReporter implements Reporter {
   }
 
   /**
-   * Called after all tests have finished execution.
-   * Collects test results, appends new run data to the store, and logs a summary of the run.
-   * Environment always matches branch: qa branch = qa env, develop branch = develop env.
-   * TEST_ENV can override if needed.
-   * Branch is resolved from CI env vars first, then falls back to git.
-   * Commit SHA is resolved from CI env vars first, then falls back to git.
-   * @returns A promise that resolves when the run data has been saved.
+   * Saves the run results to a file in the "playwright-report" directory.
+   * The file name is in the format of "run-{runId}.json".
+   * The saved run results include the run ID, timestamp, date, month, branch, commit SHA, environment, total tests, passed tests, failed tests, skipped tests, timed out tests, duration, new tests, and test results.
+   * The results are saved in a JSON format with indentation of 2 spaces.
    */
   async onEnd(): Promise<void> {
     const now = new Date();
@@ -139,8 +153,10 @@ export default class MonthlyReporter implements Reporter {
     const environment =
       process.env.TEST_ENV ?? (resolvedBranch === "qa" ? "qa" : "develop");
 
+    const runId = process.env.GITHUB_RUN_ID || uuidv4();
+
     const run: RunResult = {
-      runId: uuidv4(),
+      runId,
       timestamp: now.toISOString(),
       date,
       month,
@@ -157,9 +173,16 @@ export default class MonthlyReporter implements Reporter {
       tests: this.results,
     };
 
-    appendRun(run);
+    if (!fs.existsSync(reportDir)) {
+      fs.mkdirSync(reportDir, { recursive: true });
+    }
+
+    const filePath = path.join(reportDir, `run-${runId}.json`);
+
+    fs.writeFileSync(filePath, JSON.stringify(run, null, 2));
+
     logger.info(
-      `Monthly Reporter: Run saved — Branch: ${resolvedBranch} | Env: ${environment} | Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,
+      `Run saved ${runId} | Branch: ${resolvedBranch} | Env: ${environment} | Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,
     );
   }
 }
