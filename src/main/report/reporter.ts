@@ -9,7 +9,7 @@ import { appendRun } from "./store.js";
 import { execSync } from "child_process";
 import { v4 as uuidv4 } from "uuid";
 import { RunResult, TestResult } from "./types.js";
-import { logger } from "../utils/logger/logger.ts";
+import { logger } from "../utils/logger/logger.js";
 
 const knownTests: Set<string> = new Set();
 
@@ -82,8 +82,8 @@ export default class MonthlyReporter implements Reporter {
     const newTests = this.results.filter((r) => r.isNew).length;
 
     const branch =
-      process.env.GIT_BRANCH ||
-      process.env.GITHUB_REF_NAME ||
+      process.env.GIT_BRANCH ??
+      process.env.GITHUB_REF_NAME ??
       this.getCurrentBranch();
 
     const allowedBranches = ["qa", "develop"];
@@ -96,14 +96,14 @@ export default class MonthlyReporter implements Reporter {
         : "qa";
 
     const commitSha =
-      process.env.GIT_SHA ||
-      process.env.GITHUB_SHA?.slice(0, 7) ||
+      process.env.GIT_SHA ??
+      process.env.GITHUB_SHA?.slice(0, 7) ??
       this.getCurrentCommitSha();
 
     const environment =
       process.env.TEST_ENV ?? (resolvedBranch === "qa" ? "qa" : "develop");
 
-    const runId = process.env.GITHUB_RUN_ID || uuidv4();
+    const runId = process.env.GITHUB_RUN_ID ?? uuidv4();
 
     const run: RunResult = {
       runId,
@@ -123,10 +123,12 @@ export default class MonthlyReporter implements Reporter {
       tests: this.results,
     };
 
-    appendRun(run);
+    // appendRun is now async (may hit GitHub API in CI)
+    await appendRun(run);
 
     logger.info(
-      `Run appended ${runId} | Month: ${month} | Branch: ${resolvedBranch} | Env: ${environment} | Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,
+      `Run appended ${runId} | Month: ${month} | Branch: ${resolvedBranch} | Env: ${environment} | ` +
+        `Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,
     );
   }
 }
