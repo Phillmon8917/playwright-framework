@@ -11,12 +11,11 @@ const TEMPLATE_PATH = path.resolve(__dirname, "./report.html");
 const OUT_PATH = path.resolve(__dirname, "../../dist/report.html");
 
 /**
- * Builds a monthly report based on the data stored in the report store.
- * Creates a new directory if the output path does not exist.
- * Injects the data into the report template and writes the resulting HTML to the output path.
+ * Builds the monthly HTML report from the previous month's run data.
+ * In CI the data comes from GitHub; locally it comes from data/ on disk.
  */
-export function buildReport(): void {
-  const { reportMonth, reportStore } = loadReportData();
+export async function buildReport(): Promise<void> {
+  const { reportMonth, reportStore } = await loadReportData();
 
   if (!fs.existsSync(path.dirname(OUT_PATH))) {
     fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
@@ -36,9 +35,12 @@ export function buildReport(): void {
 
   fs.writeFileSync(OUT_PATH, html, "utf-8");
   logger.info(`Report built → ${OUT_PATH}`);
-  logger.info(`   Month: ${reportMonth}`);
-  logger.info(`   Runs:  ${reportStore.runs.length}`);
+  logger.info(`   Month : ${reportMonth}`);
+  logger.info(`   Runs  : ${reportStore.runs.length}`);
 }
 
-// Run directly
-buildReport();
+// Run directly when called as a script
+buildReport().catch((err) => {
+  logger.error(err);
+  process.exit(1);
+});
