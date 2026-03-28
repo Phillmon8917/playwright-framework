@@ -1,14 +1,19 @@
 name: Generate Test Report
 
+permissions:
+  contents: write # needed to push to phptravels-reports repo
+  actions: write
+  pages: write
+  id-token: write
+
 on:
   push:
     branches:
       - qa
       - develop
-  workflow_dispatch:
   schedule:
-    # 06:00 UTC = 08:00 SAST (South Africa Standard Time)
     - cron: "0 6 * * *"
+  workflow_dispatch:
 
 jobs:
   test-report:
@@ -23,10 +28,18 @@ jobs:
       ACTION_TIMEOUT: ${{ vars.ACTION_TIMEOUT }}
       NAVIGATION_TIMEOUT: ${{ vars.NAVIGATION_TIMEOUT }}
       BASE_URL: ${{ vars.BASE_URL }}
+      # ── Data-repo config (used by github-store.ts) ─────────────────────────
+      # DATA_REPO_TOKEN must be a PAT with Contents read+write on phptravels-reports.
+      # secrets.GITHUB_TOKEN only has access to THIS repo and cannot read/write
+      # a separate repo — that is why 404s appear even though the file exists.
+      GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+      DATA_REPO_OWNER: Phillmon8917
+      DATA_REPO_NAME: phptravels-reports
+      DATA_REPO_BRANCH: main
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout test repo
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -40,17 +53,23 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run lint
-        run: npm run lint
+      # ── Run tests ──────────────────────────────────────────────────────────
+      # reporter.ts will call appendRun() which calls githubAppendRun()
+      # which reads the existing YYYY-MM.json from phptravels-reports,
+      # appends this run, and writes it back — all via the GitHub API.
+      - name: Run tests and append run to data repo
+        run: npm run test:report
 
-      - name: Run Playwright tests
-        run: npx playwright test
-
-      - name: Style Playwright HTML report
-        run: node scripts/style-report.js
-
+      # ── Build the report HTML from previous month's data ──────────────────
+      # build-report.ts calls loadReportData() → githubLoadReportData()
+      # which fetches the previous month's JSON from phptravels-reports.
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
+
+      # ── Assemble GitHub Pages directory ───────────────────────────────────
+      - name: Set report date
+        if: always()
+        run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
       - name: Assemble Pages directory
         if: always()
@@ -58,13 +77,9 @@ jobs:
           mkdir -p gh-pages/test-results
           mkdir -p gh-pages/monthly-report
 
-          # Copy Playwright report
           cp -r playwright-report/. gh-pages/test-results/
-
-          # Copy monthly QA report
           cp src/dist/report.html gh-pages/monthly-report/index.html
 
-          # Create dashboard index
           cat > gh-pages/index.html << 'HTML'
           <!DOCTYPE html>
           <html lang="en">
@@ -72,63 +87,87 @@ jobs:
             <meta charset="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>QA Dashboard</title>
-            <!-- styles omitted for brevity -->
+            <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+            <style>
+              :root {
+                --bg: #0b0d12; --surface: #111318; --border: #1f2330;
+                --accent: #4fffb0; --accent2: #7b6fff;
+                --text: #e8eaf0; --text-muted: #6b7080;
+              }
+              *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+              body {
+                background: var(--bg); color: var(--text);
+                font-family: 'DM Sans', sans-serif; min-height: 100vh;
+                display: flex; flex-direction: column; align-items: center;
+                justify-content: center; padding: 48px 24px;
+              }
+              .badge {
+                font-family: 'DM Mono', monospace; font-size: 11px;
+                letter-spacing: 0.2em; text-transform: uppercase;
+                color: var(--accent); background: rgba(79,255,176,0.08);
+                border: 1px solid rgba(79,255,176,0.2);
+                padding: 4px 14px; border-radius: 2px; margin-bottom: 24px;
+              }
+              h1 {
+                font-family: 'Syne', sans-serif;
+                font-size: clamp(32px, 6vw, 56px); font-weight: 800;
+                letter-spacing: -0.03em; text-align: center; margin-bottom: 12px;
+              }
+              h1 span { color: var(--accent); }
+              .subtitle { color: var(--text-muted); font-size: 15px; text-align: center; margin-bottom: 56px; }
+              .cards {
+                display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 24px; width: 100%; max-width: 720px;
+              }
+              .card {
+                background: var(--surface); border: 1px solid var(--border);
+                border-radius: 12px; padding: 32px 28px;
+                text-decoration: none; color: inherit;
+                transition: transform 0.2s, border-color 0.2s;
+                position: relative; overflow: hidden;
+              }
+              .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+              .card.results::before  { background: var(--accent2); }
+              .card.monthly::before  { background: var(--accent); }
+              .card:hover { transform: translateY(-4px); border-color: #3a3f50; }
+              .card-icon { font-size: 32px; margin-bottom: 16px; }
+              .card-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+              .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; }
+              .card-link { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+              .card.results .card-link { color: var(--accent2); }
+              .card.monthly .card-link { color: var(--accent); }
+              .footer { margin-top: 56px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.8; }
+              .footer span { color: var(--accent); }
+            </style>
           </head>
           <body>
             <div class="badge">QA Automation · PHPTRAVELS</div>
             <h1>Test <span>Dashboard</span></h1>
             <p class="subtitle">All QA reports in one place. Pick a report to view.</p>
-
             <div class="cards">
               <a href="./test-results/index.html" class="card results">
                 <div class="card-icon">🧪</div>
                 <div class="card-title">Test Results</div>
-                <div class="card-desc">
-                  Latest Playwright run — pass/fail breakdown, test details,
-                  traces, screenshots and video recordings.
-                </div>
+                <div class="card-desc">Latest Playwright run — pass/fail breakdown, test details, traces, screenshots and video recordings.</div>
                 <div class="card-link">View results →</div>
               </a>
-
               <a href="./monthly-report/index.html" class="card monthly">
                 <div class="card-icon">📊</div>
                 <div class="card-title">Monthly QA Report</div>
-                <div class="card-desc">
-                  Trends, pass rates, run history and insights across the
-                  full month. Designed by Phillimon Motsinoni.
-                </div>
+                <div class="card-desc">Trends, pass rates, run history and insights across the full month. Designed by Phillimon Motsinoni.</div>
                 <div class="card-link">View report →</div>
               </a>
             </div>
-
             <div class="footer">
-              Generated ${{ env.REPORT_DATE }} &nbsp;·&nbsp; Branch: <span>${{ env.GITHUB_REF_NAME }}</span>
+              Generated ${{ env.REPORT_DATE }} &nbsp;·&nbsp; Branch: <span>${{ github.ref_name }}</span>
             </div>
           </body>
           </html>
           HTML
 
-      - name: Set report date env
-        if: always()
-        run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
-
-      - name: Upload test results artifact
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: playwright-report/
-
-      - name: Upload monthly report artifact
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: monthly-report
-          path: src/dist/report.html
-
       - name: Deploy to GitHub Pages
         if: always()
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: gh-pages/

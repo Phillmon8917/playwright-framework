@@ -976,6 +976,96 @@
           "isNew": false
         }
       ]
+    },
+    {
+      "runId": "6a97fe3d-dcaa-4bb6-b0ee-414ef0961860",
+      "timestamp": "2026-03-27T13:15:59.392Z",
+      "date": "2026-03-27",
+      "month": "2026-03",
+      "branch": "feature/everyday-pipeline-run",
+      "commitSha": "6be1d75",
+      "environment": "develop",
+      "totalTests": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "timedOut": 0,
+      "duration": 84328,
+      "newTests": 6,
+      "tests": [
+        {
+          "id": "38b9dab6411331d87e46-78d65dddb1590266cdec",
+          "title": "Verify lastName input validation",
+          "fullTitle": " > PHPTRAVELS Project > customerSignUp\\customerSignup.spec.ts > Customer Signup Page @regression > Verify lastName input validation",
+          "file": "C:\\Work Projects\\playwright-framework\\src\\tests\\customerSignUp\\customerSignup.spec.ts",
+          "suite": "Customer Signup Page @regression",
+          "status": "passed",
+          "duration": 44001,
+          "retries": 0,
+          "tags": [],
+          "isNew": true
+        },
+        {
+          "id": "38b9dab6411331d87e46-7bc845ed1f857dc7a95d",
+          "title": "Verify email input validation",
+          "fullTitle": " > PHPTRAVELS Project > customerSignUp\\customerSignup.spec.ts > Customer Signup Page @regression > Verify email input validation",
+          "file": "C:\\Work Projects\\playwright-framework\\src\\tests\\customerSignUp\\customerSignup.spec.ts",
+          "suite": "Customer Signup Page @regression",
+          "status": "passed",
+          "duration": 46873,
+          "retries": 0,
+          "tags": [],
+          "isNew": true
+        },
+        {
+          "id": "38b9dab6411331d87e46-82b011054829f1bcaf56",
+          "title": "Verify firstName input validation",
+          "fullTitle": " > PHPTRAVELS Project > customerSignUp\\customerSignup.spec.ts > Customer Signup Page @regression > Verify firstName input validation",
+          "file": "C:\\Work Projects\\playwright-framework\\src\\tests\\customerSignUp\\customerSignup.spec.ts",
+          "suite": "Customer Signup Page @regression",
+          "status": "passed",
+          "duration": 65404,
+          "retries": 0,
+          "tags": [],
+          "isNew": true
+        },
+        {
+          "id": "38b9dab6411331d87e46-f3caea67ac67b5299714",
+          "title": "Verify successful customer signup",
+          "fullTitle": " > PHPTRAVELS Project > customerSignUp\\customerSignup.spec.ts > Customer Signup Page @regression > Verify successful customer signup",
+          "file": "C:\\Work Projects\\playwright-framework\\src\\tests\\customerSignUp\\customerSignup.spec.ts",
+          "suite": "Customer Signup Page @regression",
+          "status": "passed",
+          "duration": 71459,
+          "retries": 0,
+          "tags": [],
+          "isNew": true
+        },
+        {
+          "id": "38b9dab6411331d87e46-2d6b25945ea0a9ea64af",
+          "title": "Verify password input validation",
+          "fullTitle": " > PHPTRAVELS Project > customerSignUp\\customerSignup.spec.ts > Customer Signup Page @regression > Verify password input validation",
+          "file": "C:\\Work Projects\\playwright-framework\\src\\tests\\customerSignUp\\customerSignup.spec.ts",
+          "suite": "Customer Signup Page @regression",
+          "status": "passed",
+          "duration": 34151,
+          "retries": 0,
+          "tags": [],
+          "isNew": true
+        },
+        {
+          "id": "38b9dab6411331d87e46-418cce77b4194b6ce884",
+          "title": "Verify confirm password input validation",
+          "fullTitle": " > PHPTRAVELS Project > customerSignUp\\customerSignup.spec.ts > Customer Signup Page @regression > Verify confirm password input validation",
+          "file": "C:\\Work Projects\\playwright-framework\\src\\tests\\customerSignUp\\customerSignup.spec.ts",
+          "suite": "Customer Signup Page @regression",
+          "status": "passed",
+          "duration": 33017,
+          "retries": 0,
+          "tags": [],
+          "isNew": true
+        }
+      ]
     }
   ]
 }
