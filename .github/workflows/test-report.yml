@@ -29,7 +29,10 @@ jobs:
       NAVIGATION_TIMEOUT: ${{ vars.NAVIGATION_TIMEOUT }}
       BASE_URL: ${{ vars.BASE_URL }}
       # ── Data-repo config (used by github-store.ts) ─────────────────────────
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # DATA_REPO_TOKEN must be a PAT with Contents read+write on phptravels-reports.
+      # secrets.GITHUB_TOKEN only has access to THIS repo and cannot read/write
+      # a separate repo — that is why 404s appear even though the file exists.
+      GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
       DATA_REPO_OWNER: Phillmon8917
       DATA_REPO_NAME: phptravels-reports
       DATA_REPO_BRANCH: main
