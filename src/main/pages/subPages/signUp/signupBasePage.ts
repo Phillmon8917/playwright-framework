@@ -1,7 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "../../basePage/basePage.ts";
 
-export class CustomerSignupBasePage extends BasePage {
+export class SignupBasePage extends BasePage {
   protected readonly firstNameInput: Locator;
   protected readonly lastNameInput: Locator;
   protected readonly emailInput: Locator;

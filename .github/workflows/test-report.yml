@@ -20,8 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
-      USERNAME: ${{ secrets.USERNAME }}
-      PASSWORD: ${{ secrets.PASSWORD }}
+      ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      CUSTOMER_USERNAME: ${{ secrets.CUSTOMER_USERNAME }}
+      CUSTOMER_PASSWORD: ${{ secrets.CUSTOMER_PASSWORD }}
+      AGENT_USERNAME: ${{ secrets.AGENT_USERNAME }}
+      AGENT_PASSWORD: ${{ secrets.AGENT_PASSWORD }}
       LOCAL_TEST_TIMEOUT: ${{ vars.LOCAL_TEST_TIMEOUT }}
       TEST_TIMEOUT: ${{ vars.TEST_TIMEOUT }}
       GLOBAL_TIMEOUT: ${{ vars.GLOBAL_TIMEOUT }}

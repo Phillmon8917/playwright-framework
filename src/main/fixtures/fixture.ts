@@ -1,15 +1,15 @@
 import { test as base } from "@playwright/test";
 import { HomePage } from "../pages/subPages/home/homePage.ts";
-import { CustomerSignupPage } from "../pages/subPages/customerSignup/customerSignUp.ts";
+import { SignupPage } from "../pages/subPages/signUp/signUp.ts";
 
 export const test = base.extend<{
   homePage: HomePage;
-  customerSignupPage: CustomerSignupPage;
+  signupPage: SignupPage;
 }>({
   homePage: async ({ page }, use) => {
     await use(new HomePage(page));
   },
-  customerSignupPage: async ({ page }, use) => {
-    await use(new CustomerSignupPage(page));
+  signupPage: async ({ page }, use) => {
+    await use(new SignupPage(page));
   },
 });
