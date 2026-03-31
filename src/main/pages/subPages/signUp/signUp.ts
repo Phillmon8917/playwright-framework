@@ -1,8 +1,8 @@
 import { ValidationHelper } from "../../../utils/validation/validationHelper.ts";
-import { CustomerSignupOptions } from "./customerSignup.type.ts";
-import { CustomerSignupBasePage } from "./customerSignupBasePage.ts";
+import { CustomerSignupOptions } from "./signup.type.ts";
+import { SignupBasePage } from "./signupBasePage.ts";
 
-export class CustomerSignupPage extends CustomerSignupBasePage {
+export class SignupPage extends SignupBasePage {
   /**
    * Fills the First Name input field with the given first name.
    * Waits for the element to be visible, then fills it with the given first name.
@@ -163,7 +163,7 @@ export class CustomerSignupPage extends CustomerSignupBasePage {
    * @param {CustomerSignupOptions} option - The options object containing the values to be filled in the customer signup form.
    * @returns {Promise<void>} - A promise which resolves if the operation is successful, and rejects if the operation fails.
    */
-  public async fillCustomerSignUpForm(
+  public async fillTheSignUpForm(
     option: CustomerSignupOptions,
   ): Promise<void> {
     if (option.firstName) {
@@ -191,7 +191,7 @@ export class CustomerSignupPage extends CustomerSignupBasePage {
     if (option.expectValidationErrors) {
       await this.clickCreateAccountButton();
       const validationMessage = await ValidationHelper.getValidationMessage(this.page, option.fieldId);
-      await this.modulars.assertions.assertNotNullOrEmptyVar(validationMessage, "Validation Message", "fillCustomerSignUpForm");
+      await this.modulars.assertions.assertNotNullOrEmptyVar(validationMessage, "Validation Message", "fillTheSignUpForm");
     } else {
       await this.modulars.network.assertNetworkRequest(
         "https://phptravels.net/login",
@@ -199,7 +199,7 @@ export class CustomerSignupPage extends CustomerSignupBasePage {
         () => this.clickCreateAccountButton(),
         "GET",
         "Create Account",
-        "fillCustomerSignUpForm",
+        "fillTheSignUpForm",
       );
     }
   }
