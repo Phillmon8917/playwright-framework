@@ -51,6 +51,7 @@ export class CustomerSignupPage extends CustomerSignupBasePage {
       email,
       "Email",
       "fillEmailInput",
+      {encryption: true},
     );
   }
 
@@ -68,6 +69,7 @@ export class CustomerSignupPage extends CustomerSignupBasePage {
       password,
       "Password",
       "fillPasswordInput",
+      {encryption: true},
     );
   }
 
@@ -85,6 +87,7 @@ export class CustomerSignupPage extends CustomerSignupBasePage {
       password,
       "Confirm Password",
       "fillConfirmPasswordInput",
+      {encryption: true},
     );
   }
 
