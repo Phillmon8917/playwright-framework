@@ -48,11 +48,19 @@ export class ElementActions {
     value: string,
     locatorName: string,
     methodName: string,
+    { encryption = false } = {},
   ): Promise<void> {
     try {
       await locator.waitFor({ state: "visible" });
       await locator.click({ force: true });
       await locator.fill(value);
+
+      if (encryption) {
+        const valueLength = value.length;
+        for (let i = 0; i < valueLength; i++) {
+          value = value.replace(value[i], "*");
+        }
+      }
 
       logger.info(
         `${methodName} - Successfully filled ${locatorName} with value: ${value}`,

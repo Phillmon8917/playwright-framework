@@ -3,14 +3,14 @@ import { ai } from "@zerostep/playwright";
 import { FakerHelper } from "../../main/utils/faker/fakerHelper.ts";
 import { logger } from "../../main/utils/logger/logger.ts";
 
-test.describe("Customer Signup Page @regression", () => {
+test.describe("Agent Signup Page @regression", () => {
   test("Verify successful customer signup", async ({
     homePage,
     signupPage,
     page,
   }) => {
     await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
+    await homePage.verifyNavigationToAgentSignupPage();
     const securityCheckQuestion =
       await signupPage.extractSecurityCheckQuestion();
     logger.info("Security check question is: " + securityCheckQuestion);
@@ -41,7 +41,7 @@ test.describe("Customer Signup Page @regression", () => {
     signupPage,
   }) => {
     await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
+    await homePage.verifyNavigationToAgentSignupPage();
     await signupPage.fillTheSignUpForm({
       firstName: "",
       lastName: FakerHelper.generateLastName(),
@@ -60,7 +60,7 @@ test.describe("Customer Signup Page @regression", () => {
     signupPage,
   }) => {
     await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
+    await homePage.verifyNavigationToAgentSignupPage();
     await signupPage.fillTheSignUpForm({
       firstName: FakerHelper.generateFirstName(),
       lastName: "",
@@ -79,7 +79,7 @@ test.describe("Customer Signup Page @regression", () => {
     signupPage,
   }) => {
     await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
+    await homePage.verifyNavigationToAgentSignupPage();
     await signupPage.fillTheSignUpForm({
       firstName: FakerHelper.generateFirstName(),
       lastName: FakerHelper.generateLastName(),
@@ -98,7 +98,7 @@ test.describe("Customer Signup Page @regression", () => {
     signupPage,
   }) => {
     await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
+    await homePage.verifyNavigationToAgentSignupPage();
     await signupPage.fillTheSignUpForm({
       firstName: FakerHelper.generateFirstName(),
       lastName: FakerHelper.generateLastName(),
@@ -117,7 +117,7 @@ test.describe("Customer Signup Page @regression", () => {
     signupPage,
   }) => {
     await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
+    await homePage.verifyNavigationToAgentSignupPage();
     await signupPage.fillTheSignUpForm({
       firstName: FakerHelper.generateFirstName(),
       lastName: FakerHelper.generateLastName(),
