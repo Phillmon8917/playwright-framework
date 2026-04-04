@@ -823,12 +823,26 @@
         // DEMO / SAMPLE DATA — replaced by window.__REPORT_DATA__ injection in production
         // ─────────────────────────────────────────────────────────────────────────────
 
+        /**
+         * Generates sample data for the report.
+         * Sample data includes the previous month's runs, with random run counts, test counts, and pass rates.
+         * @returns {Object} - An object containing the previous month and an array of run objects.
+         * @example
+         * const { month, runs } = generateSampleData();
+         * console.log(month); // '2025-02'
+         * console.log(runs); // array of run objects
+         */
         function generateSampleData() {
-            const month = '2025-02';
+            const now = new Date();
+            const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const month = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+            const year = prevDate.getFullYear();
+            const monthNum = prevDate.getMonth(); // 0-indexed, already decremented
+            const daysInMonth = new Date(year, monthNum + 1, 0).getDate();
             const runs = [];
 
-            for (let day = 1; day <= 28; day += Math.floor(Math.random() * 3) + 1) {
-                const date = `2025-02-${String(day).padStart(2, '0')}`;
+            for (let day = 1; day <= daysInMonth; day += Math.floor(Math.random() * 3) + 1) {
+                const date = `${month}-${String(day).padStart(2, '0')}`;
                 const runCount = Math.floor(Math.random() * 3) + 1;
                 for (let r = 0; r < runCount; r++) {
                     const newTests = Math.floor(Math.random() * 5);
