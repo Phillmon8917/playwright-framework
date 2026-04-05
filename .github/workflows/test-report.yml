@@ -1,7 +1,7 @@
 name: Generate Test Report
 
 permissions:
-  contents: write # needed to push to phptravels-reports repo
+  contents: write
   actions: write
   pages: write
   id-token: write
@@ -32,14 +32,6 @@ jobs:
       ACTION_TIMEOUT: ${{ vars.ACTION_TIMEOUT }}
       NAVIGATION_TIMEOUT: ${{ vars.NAVIGATION_TIMEOUT }}
       BASE_URL: ${{ vars.BASE_URL }}
-      # ── Data-repo config (used by github-store.ts) ─────────────────────────
-      # DATA_REPO_TOKEN must be a PAT with Contents read+write on phptravels-reports.
-      # secrets.GITHUB_TOKEN only has access to THIS repo and cannot read/write
-      # a separate repo — that is why 404s appear even though the file exists.
-      GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
-      DATA_REPO_OWNER: Phillmon8917
-      DATA_REPO_NAME: phptravels-reports
-      DATA_REPO_BRANCH: main
 
     steps:
       - name: Checkout test repo
@@ -57,20 +49,22 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      # ── Run tests ──────────────────────────────────────────────────────────
-      # reporter.ts will call appendRun() which calls githubAppendRun()
-      # which reads the existing YYYY-MM.json from phptravels-reports,
-      # appends this run, and writes it back — all via the GitHub API.
       - name: Run tests and append run to data repo
         run: npm run test:report
+        env:
+          GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+          DATA_REPO_OWNER: Phillmon8917
+          DATA_REPO_NAME: phptravels-reports
+          DATA_REPO_BRANCH: main
 
-      # ── Build the report HTML from previous month's data ──────────────────
-      # build-report.ts calls loadReportData() → githubLoadReportData()
-      # which fetches the previous month's JSON from phptravels-reports.
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+          DATA_REPO_OWNER: Phillmon8917
+          DATA_REPO_NAME: phptravels-reports
+          DATA_REPO_BRANCH: main
 
-      # ── Assemble GitHub Pages directory ───────────────────────────────────
       - name: Set report date
         if: always()
         run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
