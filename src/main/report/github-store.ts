@@ -14,24 +14,20 @@ const REPO_OWNER = process.env.DATA_REPO_OWNER ?? "Phillmon8917";
 const REPO_NAME = process.env.DATA_REPO_NAME ?? "phptravels-reports";
 const REPO_BRANCH = process.env.DATA_REPO_BRANCH ?? "main";
 
-// In the workflow GITHUB_TOKEN is set to secrets.DATA_REPO_TOKEN (a PAT with
-// Contents read+write on phptravels-reports). The built-in secrets.GITHUB_TOKEN
-// only scopes to the current repo and will 404 on any other repo.
-const TOKEN = process.env.GITHUB_TOKEN ?? "";
+// DATA_REPO_TOKEN is a PAT with Contents read+write on phptravels-reports.
+// The built-in GITHUB_TOKEN only scopes to the current repo and cannot
+// read/write a separate repo — that is why we use DATA_REPO_TOKEN directly.
+const TOKEN = process.env.DATA_REPO_TOKEN ?? "";
 
 /**
- * Returns an object containing the necessary HTTP headers to make
- * authenticated requests to the GitHub API.
- *
- * @throws {Error} If the GITHUB_TOKEN env var is not set.
- *
- * @returns {Record<string, string>} An object containing the necessary
- * HTTP headers to make authenticated requests to the GitHub API.
+ * Returns the necessary HTTP headers for authenticated GitHub API requests.
+ * @throws {Error} If DATA_REPO_TOKEN env var is not set.
  */
 function headers(): Record<string, string> {
   if (!TOKEN) {
     throw new Error(
-      "[github-store] GITHUB_TOKEN env var is not set — cannot call GitHub API",
+      "[github-store] DATA_REPO_TOKEN env var is not set — cannot call GitHub API. " +
+        `Ensure DATA_REPO_TOKEN is set in the workflow step env.`,
     );
   }
   return {
@@ -45,10 +41,6 @@ function headers(): Record<string, string> {
 /**
  * Returns a path to a monthly JSON file in the phptravels-reports
  * repository (e.g. "data/2026-03.json").
- * @param {string} month - The month to generate a path for (in the
- * format "YYYY-MM").
- * @returns {string} A path to a monthly JSON file in the phptravels-reports
- * repository.
  */
 function dataPath(month: string): string {
   return `data/${month}.json`;
@@ -95,7 +87,7 @@ export async function githubLoadStore(
   const store = JSON.parse(content) as MonthlyStore;
 
   logger.info(
-    `[github-store] Loaded ${month}.json (sha: ${json.sha.slice(0, 7)})`,
+    `[github-store] Loaded ${month}.json (sha: ${json.sha.slice(0, 7)}, runs: ${store.runs.length})`,
   );
   return { store, sha: json.sha };
 }
@@ -164,10 +156,18 @@ export async function githubLoadReportData(): Promise<{
   const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const reportMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, "0")}`;
 
+  logger.info(
+    `[github-store] Loading report data — reportMonth: ${reportMonth}, currentMonth: ${currentMonth}`,
+  );
+
   const [{ store: reportStore }, { store: currentStore }] = await Promise.all([
     githubLoadStore(reportMonth),
     githubLoadStore(currentMonth),
   ]);
+
+  logger.info(
+    `[github-store] reportStore runs: ${reportStore.runs.length}, currentStore runs: ${currentStore.runs.length}`,
+  );
 
   return { reportMonth, reportStore, currentMonth, currentStore };
 }

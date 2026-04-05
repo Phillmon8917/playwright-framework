@@ -52,7 +52,7 @@ jobs:
       - name: Run tests and append run to data repo
         run: npm run test:report
         env:
-          GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+          DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
           DATA_REPO_OWNER: Phillmon8917
           DATA_REPO_NAME: phptravels-reports
           DATA_REPO_BRANCH: main
@@ -60,7 +60,7 @@ jobs:
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
         env:
-          GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+          DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
           DATA_REPO_OWNER: Phillmon8917
           DATA_REPO_NAME: phptravels-reports
           DATA_REPO_BRANCH: main
