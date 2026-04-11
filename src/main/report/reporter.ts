@@ -5,29 +5,27 @@ import {
   TestCase,
   TestResult as PWTestResult,
 } from "@playwright/test/reporter";
-import { appendRun } from "./store.js";
+import { appendRun, loadKnownTestIds, saveKnownTestIds } from "./store.js";
 import { execSync } from "child_process";
 import { v4 as uuidv4 } from "uuid";
 import { RunResult, TestResult } from "./types.js";
 import { logger } from "../utils/logger/logger.js";
 
-const knownTests: Set<string> = new Set();
-
 export default class MonthlyReporter implements Reporter {
   private results: TestResult[] = [];
   private startTime!: number;
   private previousTestIds: Set<string> = new Set();
+  private currentTestIds: Set<string> = new Set();
 
-  onBegin(_config: FullConfig, suite: Suite): void {
+  async onBegin(_config: FullConfig, suite: Suite): Promise<void> {
     this.startTime = Date.now();
-    this.previousTestIds = new Set(knownTests);
-    this.collectTestIds(suite);
-  }
-
-  private collectTestIds(suite: Suite): void {
-    for (const child of suite.allTests()) {
-      knownTests.add(child.id);
+    this.previousTestIds = await loadKnownTestIds();
+    for (const test of suite.allTests()) {
+      this.currentTestIds.add(test.id);
     }
+    logger.info(
+      `[reporter] Known tests from previous runs: ${this.previousTestIds.size}, current run: ${this.currentTestIds.size}`,
+    );
   }
 
   private getCurrentBranch(): string {
@@ -123,12 +121,17 @@ export default class MonthlyReporter implements Reporter {
       tests: this.results,
     };
 
-    // appendRun is now async (may hit GitHub API in CI)
     await appendRun(run);
+
+    const mergedIds = new Set([
+      ...this.previousTestIds,
+      ...this.currentTestIds,
+    ]);
+    await saveKnownTestIds(mergedIds);
 
     logger.info(
       `Run appended ${runId} | Month: ${month} | Branch: ${resolvedBranch} | Env: ${environment} | ` +
-        `Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}`,
+        `Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, TimedOut: ${timedOut}, New: ${newTests}`,
     );
   }
 }
