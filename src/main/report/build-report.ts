@@ -17,6 +17,10 @@ const OUT_PATH = path.resolve(__dirname, "../../dist/report.html");
 export async function buildReport(): Promise<void> {
   const { reportMonth, reportStore } = await loadReportData();
 
+  logger.info(
+    `Building report for month: ${reportMonth}, runs: ${reportStore.runs.length}`,
+  );
+
   if (!fs.existsSync(path.dirname(OUT_PATH))) {
     fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
   }
@@ -27,11 +31,13 @@ export async function buildReport(): Promise<void> {
     month: reportMonth,
     runs: reportStore.runs,
   });
+  const injectedScript = `<script>window.__REPORT_DATA__ = ${dataJson};</script>`;
 
-  html = html.replace(
-    "const DATA = window.__REPORT_DATA__ || generateSampleData();",
-    `const DATA = window.__REPORT_DATA__ || ${dataJson};`,
-  );
+  if (!html.includes("</head>")) {
+    throw new Error("Template missing </head> — cannot inject report data");
+  }
+
+  html = html.replace("</head>", `${injectedScript}\n</head>`);
 
   fs.writeFileSync(OUT_PATH, html, "utf-8");
   logger.info(`Report built → ${OUT_PATH}`);
