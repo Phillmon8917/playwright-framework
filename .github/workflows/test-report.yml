@@ -59,7 +59,7 @@ jobs:
 
       - name: Inject custom style into Playwright report
         if: always()
-        run: node inject-report-style.mjs
+        run: node scripts/style-report.js
 
       - name: Build monthly QA report
         if: always()
