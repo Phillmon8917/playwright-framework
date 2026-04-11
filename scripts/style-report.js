@@ -2,11 +2,27 @@ import fs from "fs";
 import path from "path";
 
 const reportPath = path.resolve("playwright-report/index.html");
+
+if (!fs.existsSync(reportPath)) {
+  console.error(
+    `[${new Date().toISOString()}] [ERROR] playwright-report/index.html not found — skipping`,
+  );
+  process.exit(0);
+}
+
 let html = fs.readFileSync(reportPath, "utf8");
 
-html = html.replace(
-  "</head>",
-  `<style>
+const headCloseMatch = html.match(/<\/head>/i);
+const bodyOpenMatch = html.match(/<body[^>]*>/i);
+
+if (!headCloseMatch || !bodyOpenMatch) {
+  console.error(
+    `[${new Date().toISOString()}] [ERROR] Could not find </head> or <body> tags — skipping`,
+  );
+  process.exit(0);
+}
+
+const style = `<style>
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700&display=swap');
 
     .pw-report-header {
@@ -39,19 +55,19 @@ html = html.replace(
       padding: 4px 12px;
       border-radius: 999px;
     }
-  </style>
-  </head>`,
-);
+  </style>`;
 
-html = html.replace(
-  "<body>",
-  `<body>
-   <div class="pw-report-header">
+const header = `<div class="pw-report-header">
      <div class="pw-report-header-title">
        Tester: <span>Phillimon Motsinoni</span> &nbsp;·&nbsp; Application: <span>PHP TRAVELS</span>
      </div>
      <div class="pw-report-header-badge">Playwright Report</div>
-   </div>`,
-);
+   </div>`;
+
+html = html.replace(headCloseMatch[0], `${style}\n${headCloseMatch[0]}`);
+html = html.replace(bodyOpenMatch[0], `${bodyOpenMatch[0]}\n${header}`);
 
 fs.writeFileSync(reportPath, html, "utf8");
+console.log(
+  `[${new Date().toISOString()}] [INFO] Custom styles injected into playwright-report/index.html`,
+);
