@@ -57,6 +57,10 @@ jobs:
           DATA_REPO_NAME: phptravels-reports
           DATA_REPO_BRANCH: main
 
+      - name: Inject custom style into Playwright report
+        if: always()
+        run: node inject-report-style.mjs
+
       - name: Build monthly QA report
         if: always()
         run: node --loader ts-node/esm src/main/report/build-report.ts

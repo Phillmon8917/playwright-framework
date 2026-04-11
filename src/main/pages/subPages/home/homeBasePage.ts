@@ -161,13 +161,13 @@ export class HomeBasePage extends BasePage {
     this.blogsHeader = page.locator('h1:text("Blogs")');
 
     //Language
-    this.languageButton = page.getByRole("button", { name: /language/i });
+    this.languageButton = page.locator('div.group > button').nth(2);
     this.languageOption = (choice: string): Locator => {
       return page.getByRole("link", { name: choice });
     };
 
     //Currency
-    this.currencyButton = page.getByRole("button", { name: /payments/i });
+    this.currencyButton = page.locator('div.group > button').nth(3);
     this.currencyOption = (choice: string): Locator => {
       return page.getByRole("link", { name: choice });
     };
