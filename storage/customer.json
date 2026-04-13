@@ -1,0 +1,29 @@
+{
+  "cookies": [
+    {
+      "name": "PHPSESSID",
+      "value": "rlc955mnhdmv2vs4s901etpjni",
+      "domain": "phptravels.net",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://phptravels.net",
+      "localStorage": [
+        {
+          "name": "pusherTransportTLS",
+          "value": "{\"timestamp\":1776054154752,\"transport\":\"ws\",\"latency\":906}"
+        },
+        {
+          "name": "pusher_session_id",
+          "value": "user-1776054147423-a2tmn2x63"
+        }
+      ]
+    }
+  ]
+}

@@ -1,14 +1,3 @@
-/**
- * store.ts — Monthly run data store.
- *
- * Environment routing:
- *   - CI  (GITHUB_ACTIONS=true)  → reads/writes JSON files via GitHub API
- *   - Local                      → reads/writes JSON files from data/ on disk
- *
- * Both paths expose the same public API surface so callers never have to care
- * which backend is in use.
- */
-
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
@@ -18,40 +7,29 @@ import { logger } from "../utils/logger/logger.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ── Local filesystem paths ──────────────────────────────────────────────────
 const STORE_DIR = path.resolve(__dirname, "../../../data");
+const KNOWN_IDS_FILE = "known-test-ids.json";
 
 /**
- * Ensure the data/ directory exists, creating it if necessary.
- *
- * This directory is used for local run data storage when the CI environment
- * variable is not set.
+ * Ensures the local data/ directory exists.
  */
 function ensureStoreDir(): void {
   if (!fs.existsSync(STORE_DIR)) fs.mkdirSync(STORE_DIR, { recursive: true });
 }
 
-
 /**
- * Returns the absolute path to a JSON file containing run data for a given month.
- *
- * The file path is constructed by joining the data/ directory with the
- * month string and appending a .json extension.
- *
- * @param {string} month - The month string in the format "YYYY-MM".
- * @returns {string} - The absolute path to the JSON file.
+ * Returns the absolute path to a monthly JSON store file.
+ * @param {string} month - Month in YYYY-MM format.
+ * @returns {string} Absolute file path.
  */
 function storeFilePath(month: string): string {
   return path.join(STORE_DIR, `${month}.json`);
 }
 
-
 /**
- * Loads a MonthlyStore from a local JSON file.
- *
- * @param {string} month - The month string in the format "YYYY-MM".
- * @returns {MonthlyStore} - The loaded MonthlyStore if the file exists, otherwise
- *   a new MonthlyStore with an empty runs array.
+ * Loads a MonthlyStore from disk. Returns an empty store if the file does not exist.
+ * @param {string} month - Month in YYYY-MM format.
+ * @returns {MonthlyStore} The loaded store or an empty one.
  */
 function localLoadStore(month: string): MonthlyStore {
   const file = storeFilePath(month);
@@ -60,12 +38,8 @@ function localLoadStore(month: string): MonthlyStore {
 }
 
 /**
- * Saves a MonthlyStore to a local JSON file.
- *
- * The file path is constructed by joining the data/ directory with the
- * month string and appending a .json extension.
- *
- * @param {MonthlyStore} store - The MonthlyStore to be saved.
+ * Saves a MonthlyStore to disk.
+ * @param {MonthlyStore} store - The store to save.
  */
 function localSaveStore(store: MonthlyStore): void {
   ensureStoreDir();
@@ -76,38 +50,26 @@ function localSaveStore(store: MonthlyStore): void {
   );
 }
 
-// ── CI detection ────────────────────────────────────────────────────────────
 /**
- * Returns true if the code is running in a GitHub Actions (CI) environment,
- * and false otherwise.
- *
- * This is a convenience function to simplify code that needs to adapt
- * behavior to the environment in which it is running.
- *
- * @returns {boolean} - True if running in CI, false otherwise.
+ * Returns true when running inside GitHub Actions.
+ * @returns {boolean}
  */
 function isCI(): boolean {
   return process.env.GITHUB_ACTIONS === "true";
 }
 
-// ── Public API ───────────────────────────────────────────────────────────────
-
 /**
- * Append a run to the current month's store.
- *
- * In CI:    reads the file from GitHub, pushes the run, writes back to GitHub.
- * Locally:  reads the file from data/, pushes the run, writes back to data/.
- *           Rotates: keeps only current and previous month files locally.
+ * Appends a run result to the correct monthly store.
+ * In CI writes to GitHub; locally writes to disk and prunes old files.
+ * @param {RunResult} run - The run result to append.
  */
 export async function appendRun(run: RunResult): Promise<void> {
   if (isCI()) {
-    // Dynamic import keeps the GitHub client out of the local bundle entirely
-    const { githubAppendRun } = await import("./github-store.ts");
+    const { githubAppendRun } = await import("./github-store.js");
     await githubAppendRun(run);
     return;
   }
 
-  // Local path
   const currentMonth = run.month;
   const [year, month] = currentMonth.split("-").map(Number);
   const prevDate = new Date(year, month - 2, 1);
@@ -117,7 +79,6 @@ export async function appendRun(run: RunResult): Promise<void> {
   store.runs.push(run);
   localSaveStore(store);
 
-  // Prune files older than previous month (local only)
   const files = fs.readdirSync(STORE_DIR).filter((f) => f.endsWith(".json"));
   for (const file of files) {
     const fileMonth = file.replace(".json", "");
@@ -131,13 +92,9 @@ export async function appendRun(run: RunResult): Promise<void> {
 }
 
 /**
- * Load stored data for report generation.
- *
- * Returns:
- *   reportMonth  — the previous calendar month (what gets displayed on the report)
- *   reportStore  — that month's accumulated runs
- *   currentMonth — the current calendar month
- *   currentStore — runs collected so far this month
+ * Loads the report data for the previous and current months.
+ * In CI reads from GitHub; locally reads from disk.
+ * @returns Report month, report store, current month, and current store.
  */
 export async function loadReportData(): Promise<{
   reportMonth: string;
@@ -146,7 +103,7 @@ export async function loadReportData(): Promise<{
   currentStore: MonthlyStore;
 }> {
   if (isCI()) {
-    const { githubLoadReportData } = await import("./github-store.ts");
+    const { githubLoadReportData } = await import("./github-store.js");
     return githubLoadReportData();
   }
 
@@ -164,7 +121,46 @@ export async function loadReportData(): Promise<{
 }
 
 /**
- * List all available store months on disk (local only — for debugging).
+ * Loads the persisted set of known test IDs.
+ * In CI reads from GitHub; locally reads from disk.
+ * @returns {Promise<Set<string>>} Set of previously seen test IDs.
+ */
+export async function loadKnownTestIds(): Promise<Set<string>> {
+  if (isCI()) {
+    const { githubLoadKnownTestIds } = await import("./github-store.js");
+    return githubLoadKnownTestIds();
+  }
+
+  const file = path.join(STORE_DIR, KNOWN_IDS_FILE);
+  if (!fs.existsSync(file)) return new Set();
+  const ids = JSON.parse(fs.readFileSync(file, "utf-8")) as string[];
+  return new Set(ids);
+}
+
+/**
+ * Persists the full set of known test IDs.
+ * In CI writes to GitHub; locally writes to disk.
+ * @param {Set<string>} ids - The complete set of known test IDs to save.
+ */
+export async function saveKnownTestIds(ids: Set<string>): Promise<void> {
+  if (isCI()) {
+    const { githubSaveKnownTestIds } = await import("./github-store.js");
+    await githubSaveKnownTestIds(ids);
+    return;
+  }
+
+  ensureStoreDir();
+  fs.writeFileSync(
+    path.join(STORE_DIR, KNOWN_IDS_FILE),
+    JSON.stringify([...ids], null, 2),
+    "utf-8",
+  );
+  logger.info(`[store] Saved ${ids.size} known test IDs locally`);
+}
+
+/**
+ * Lists all stored months on disk. For local debugging only.
+ * @returns {string[]} Sorted array of month strings in YYYY-MM format.
  */
 export function listStoredMonths(): string[] {
   ensureStoreDir();

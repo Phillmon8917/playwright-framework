@@ -3,38 +3,38 @@ import { ai } from "@zerostep/playwright";
 import { FakerHelper } from "../../main/utils/faker/fakerHelper.ts";
 import { logger } from "../../main/utils/logger/logger.ts";
 
-test.describe("Customer Signup Page @regression", () => {
-  test("Verify successful customer signup", async ({
-    homePage,
-    signupPage,
-    page,
-  }) => {
-    await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
-    const securityCheckQuestion =
-      await signupPage.extractSecurityCheckQuestion();
-    logger.info("Security check question is: " + securityCheckQuestion);
-    const securityCheckAnswer = await ai(
-      `Answer this math question with only a number: ${securityCheckQuestion}`,
-      { page, test },
-    );
+test.describe("Customer Signup Page @regression @guest", () => {
+  test(
+    "Verify successful customer signup",
+    { tag: "@sanity" },
+    async ({ homePage, signupPage, page }) => {
+      await homePage.loadThePage();
+      await homePage.verifyNavigationToCustomerSignupPage();
+      const securityCheckQuestion =
+        await signupPage.extractSecurityCheckQuestion();
+      logger.info("Security check question is: " + securityCheckQuestion);
+      const securityCheckAnswer = await ai(
+        `Answer this math question with only a number: ${securityCheckQuestion}`,
+        { page, test },
+      );
 
-    logger.info("Security check answer is: " + securityCheckAnswer);
-    const generatedPassword = FakerHelper.generatePassword(8);
-    await signupPage.fillTheSignUpForm({
-      firstName: FakerHelper.generateFirstName(),
-      lastName: FakerHelper.generateLastName(),
-      email: FakerHelper.generateEmail(),
-      password: generatedPassword,
-      confirmPassword: generatedPassword,
-      securityCheck: securityCheckAnswer,
-      agreeToTerms: true,
-      expectValidationErrors: false,
-      fieldId: "",
-    });
-    await signupPage.verifyBackendValidationErrorsAreHidden();
-    logger.info("Assertion Passed - Customer signup is successful");
-  });
+      logger.info("Security check answer is: " + securityCheckAnswer);
+      const generatedPassword = FakerHelper.generatePassword(8);
+      await signupPage.fillTheSignUpForm({
+        firstName: FakerHelper.generateFirstName(),
+        lastName: FakerHelper.generateLastName(),
+        email: FakerHelper.generateEmail(),
+        password: generatedPassword,
+        confirmPassword: generatedPassword,
+        securityCheck: securityCheckAnswer,
+        agreeToTerms: true,
+        expectValidationErrors: false,
+        fieldId: "",
+      });
+      await signupPage.verifyBackendValidationErrorsAreHidden();
+      logger.info("Assertion Passed - Customer signup is successful");
+    },
+  );
 
   test("Verify firstName input validation", async ({
     homePage,
@@ -55,10 +55,7 @@ test.describe("Customer Signup Page @regression", () => {
     logger.info("Assertion Passed - First name input validation is successful");
   });
 
-  test("Verify lastName input validation", async ({
-    homePage,
-    signupPage,
-  }) => {
+  test("Verify lastName input validation", async ({ homePage, signupPage }) => {
     await homePage.loadThePage();
     await homePage.verifyNavigationToCustomerSignupPage();
     await signupPage.fillTheSignUpForm({
@@ -74,29 +71,27 @@ test.describe("Customer Signup Page @regression", () => {
     logger.info("Assertion Passed - Last name input validation is successful");
   });
 
-  test("Verify email input validation", async ({
-    homePage,
-    signupPage,
-  }) => {
-    await homePage.loadThePage();
-    await homePage.verifyNavigationToCustomerSignupPage();
-    await signupPage.fillTheSignUpForm({
-      firstName: FakerHelper.generateFirstName(),
-      lastName: FakerHelper.generateLastName(),
-      email: "",
-      password: FakerHelper.generatePassword(8),
-      confirmPassword: FakerHelper.generatePassword(8),
-      agreeToTerms: true,
-      expectValidationErrors: true,
-      fieldId: "email",
-    });
-    logger.info("Assertion Passed - Email input validation is successful");
-  });
+  test(
+    "Verify email input validation",
+    { tag: "@sanity" },
+    async ({ homePage, signupPage }) => {
+      await homePage.loadThePage();
+      await homePage.verifyNavigationToCustomerSignupPage();
+      await signupPage.fillTheSignUpForm({
+        firstName: FakerHelper.generateFirstName(),
+        lastName: FakerHelper.generateLastName(),
+        email: "",
+        password: FakerHelper.generatePassword(8),
+        confirmPassword: FakerHelper.generatePassword(8),
+        agreeToTerms: true,
+        expectValidationErrors: true,
+        fieldId: "email",
+      });
+      logger.info("Assertion Passed - Email input validation is successful");
+    },
+  );
 
-  test("Verify password input validation", async ({
-    homePage,
-    signupPage,
-  }) => {
+  test("Verify password input validation", async ({ homePage, signupPage }) => {
     await homePage.loadThePage();
     await homePage.verifyNavigationToCustomerSignupPage();
     await signupPage.fillTheSignUpForm({
@@ -112,7 +107,7 @@ test.describe("Customer Signup Page @regression", () => {
     logger.info("Assertion Passed - Password input validation is successful");
   });
 
-   test("Verify confirm password input validation", async ({
+  test("Verify confirm password input validation", async ({
     homePage,
     signupPage,
   }) => {
@@ -128,6 +123,8 @@ test.describe("Customer Signup Page @regression", () => {
       expectValidationErrors: true,
       fieldId: "confirm_password",
     });
-    logger.info("Assertion Passed - Confirm password input validation is successful");
+    logger.info(
+      "Assertion Passed - Confirm password input validation is successful",
+    );
   });
 });

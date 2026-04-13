@@ -12,7 +12,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
-  reporter: [["html"], ["list"], ["./src/main/report/reporter.ts"]],
+  reporter: process.env.CI
+    ? [["blob"], ["list"], ["./src/main/report/reporter.ts"]]
+    : [["html"], ["list"], ["./src/main/report/reporter.ts"]],
   use: {
     baseURL: process.env.BASE_URL || "https://phptravels.net/",
     trace: process.env.CI ? "retain-on-failure" : "off",
@@ -24,8 +26,55 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "PHPTRAVELS Project",
+      name: "auth-customer",
       use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/authentication/customer.auth.ts",
+    },
+    {
+      name: "auth-agent",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/authentication/agent.auth.ts",
+    },
+    {
+      name: "auth-admin",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/authentication/admin.auth.ts",
+    },
+    {
+      name: "guest",
+      use: { ...devices["Desktop Chrome"] },
+      grep: /@guest/,
+      testIgnore: "**/authentication/**",
+    },
+    {
+      name: "customer",
+      dependencies: ["auth-customer"],
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "storage/customer.json",
+      },
+      grep: /@customer/,
+      testIgnore: "**/authentication/**",
+    },
+    {
+      name: "agent",
+      dependencies: ["auth-agent"],
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "storage/agent.json",
+      },
+      grep: /@agent/,
+      testIgnore: "**/authentication/**",
+    },
+    {
+      name: "admin",
+      dependencies: ["auth-admin"],
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "storage/admin.json",
+      },
+      grep: /@admin/,
+      testIgnore: "**/authentication/**",
     },
   ],
 });

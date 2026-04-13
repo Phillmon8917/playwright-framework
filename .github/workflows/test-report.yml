@@ -1,24 +1,25 @@
 name: Generate Test Report
 
 permissions:
-  contents: write # needed to push to phptravels-reports repo
+  contents: write
   actions: write
   pages: write
   id-token: write
 
 on:
-  push:
-    branches:
-      - qa
-      - develop
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
 
 jobs:
-  test-report:
+  test-shard:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
     env:
+      CI: true
       ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -32,11 +33,46 @@ jobs:
       ACTION_TIMEOUT: ${{ vars.ACTION_TIMEOUT }}
       NAVIGATION_TIMEOUT: ${{ vars.NAVIGATION_TIMEOUT }}
       BASE_URL: ${{ vars.BASE_URL }}
-      # ── Data-repo config (used by github-store.ts) ─────────────────────────
-      # DATA_REPO_TOKEN must be a PAT with Contents read+write on phptravels-reports.
-      # secrets.GITHUB_TOKEN only has access to THIS repo and cannot read/write
-      # a separate repo — that is why 404s appear even though the file exists.
-      GITHUB_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+
+    steps:
+      - name: Checkout test repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run tests shard ${{ matrix.shard }} of 6
+        run: npx playwright test --shard=${{ matrix.shard }}/6
+        env:
+          DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+          DATA_REPO_OWNER: Phillmon8917
+          DATA_REPO_NAME: phptravels-reports
+          DATA_REPO_BRANCH: main
+
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-blob-shard-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 1
+
+  merge-and-deploy:
+    needs: test-shard
+    runs-on: ubuntu-latest
+    if: always()
+    env:
+      CI: true
+      DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
       DATA_REPO_OWNER: Phillmon8917
       DATA_REPO_NAME: phptravels-reports
       DATA_REPO_BRANCH: main
@@ -57,26 +93,35 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      # ── Run tests ──────────────────────────────────────────────────────────
-      # reporter.ts will call appendRun() which calls githubAppendRun()
-      # which reads the existing YYYY-MM.json from phptravels-reports,
-      # appends this run, and writes it back — all via the GitHub API.
-      - name: Run tests and append run to data repo
-        run: npm run test:report
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: playwright-blob-shard-*
+          merge-multiple: true
+          path: all-blob-reports
 
-      # ── Build the report HTML from previous month's data ──────────────────
-      # build-report.ts calls loadReportData() → githubLoadReportData()
-      # which fetches the previous month's JSON from phptravels-reports.
+      - name: Check blob reports exist
+        run: |
+          if [ ! -d "all-blob-reports" ] || [ -z "$(ls -A all-blob-reports)" ]; then
+            echo "No blob reports found — shards may have all failed"
+            exit 1
+          fi
+          echo "Found blob reports:"
+          ls -la all-blob-reports/
+
+      - name: Merge shard reports into HTML report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Inject custom style into Playwright report
+        run: node scripts/style-report.js
+
       - name: Build monthly QA report
         run: node --loader ts-node/esm src/main/report/build-report.ts
 
-      # ── Assemble GitHub Pages directory ───────────────────────────────────
       - name: Set report date
-        if: always()
         run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
       - name: Assemble Pages directory
-        if: always()
         run: |
           mkdir -p gh-pages/test-results
           mkdir -p gh-pages/monthly-report
@@ -170,7 +215,6 @@ jobs:
           HTML
 
       - name: Deploy to GitHub Pages
-        if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
