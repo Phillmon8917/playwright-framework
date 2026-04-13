@@ -1,6 +1,6 @@
 import { Page, Locator} from "@playwright/test";
-import { DateOption } from "../calendar/calenderNavigator.type";
-import { logger } from "../../utils/logger/logger";
+import { DateOption } from "../calendar/calenderNavigator.type.ts";
+import { logger } from "../../utils/logger/logger.ts";
 
 export class CalendarNavigator {
   private readonly page: Page;

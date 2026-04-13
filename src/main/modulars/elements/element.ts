@@ -1,5 +1,5 @@
-import { Locator } from "@playwright/test";
-import { logger } from "../../utils/logger/logger";
+import { Locator, expect } from "@playwright/test";
+import { logger } from "../../utils/logger/logger.ts";
 
 export class ElementActions {
   /**
@@ -48,11 +48,19 @@ export class ElementActions {
     value: string,
     locatorName: string,
     methodName: string,
+    { encryption = false } = {},
   ): Promise<void> {
     try {
       await locator.waitFor({ state: "visible" });
       await locator.click({ force: true });
       await locator.fill(value);
+
+      if (encryption) {
+        const valueLength = value.length;
+        for (let i = 0; i < valueLength; i++) {
+          value = value.replace(value[i], "*");
+        }
+      }
 
       logger.info(
         `${methodName} - Successfully filled ${locatorName} with value: ${value}`,
@@ -409,6 +417,72 @@ export class ElementActions {
       } else {
         logger.error(
           `${methodName} - Failed to JS-click ${locatorName}: ${String(err)}`,
+        );
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * Checks the given checkbox element.
+   * Uses force:true to bypass overlays.
+   * Logs success or failure.
+   * @param {Locator} locator - The locator of the checkbox.
+   * @param {string} locatorName - The name of the checkbox.
+   * @param {string} methodName - The name of the calling method.
+   */
+  public async checkElement(
+    locator: Locator,
+    locatorName: string,
+    methodName: string,
+  ): Promise<void> {
+    try {
+      await locator.waitFor({ state: "visible" });
+      await locator.check({ force: true });
+      await expect(locator).toBeChecked();
+
+      logger.info(`${methodName} - Successfully checked ${locatorName}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(
+          `${methodName} - Failed to check ${locatorName}: ${err.message}`,
+        );
+      } else {
+        logger.error(
+          `${methodName} - Failed to check ${locatorName}: ${String(err)}`,
+        );
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * Unchecks the given checkbox element.
+   * Uses force:true to bypass overlays.
+   * Logs success or failure.
+   * @param {Locator} locator - The locator of the checkbox.
+   * @param {string} locatorName - The name of the checkbox.
+   * @param {string} methodName - The name of the calling method.
+   */
+  public async uncheckElement(
+    locator: Locator,
+    locatorName: string,
+    methodName: string,
+  ): Promise<void> {
+    try {
+      await locator.waitFor({ state: "visible" });
+      await locator.uncheck({ force: true });
+      await expect(locator).not.toBeChecked();
+
+      logger.info(`${methodName} - Successfully unchecked ${locatorName}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        logger.error(
+          `${methodName} - Failed to uncheck ${locatorName}: ${err.message}`,
+        );
+      } else {
+        logger.error(
+          `${methodName} - Failed to uncheck ${locatorName}: ${String(err)}`,
         );
       }
       throw err;

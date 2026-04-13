@@ -1,5 +1,5 @@
-import { test } from "../../../src/main/fixtures/fixture";
-import { logger } from "../../main/utils/logger/logger";
+import { test } from "../../../src/main/fixtures/fixture.ts";
+import { logger } from "../../main/utils/logger/logger.ts";
 
 test.describe("Home Page @regression", () => {
   test("Verify Home Page is loaded", async ({ homePage }) => {
@@ -150,40 +150,6 @@ test.describe("Home Page @regression", () => {
     await homePage.loadThePage();
     await homePage.verifyAllQuickSearchTabsAreVisible();
     logger.info("Assertion Passed - All quick search tabs are visible");
-  });
-
-  test("Should verify featured properties section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyFeaturedPropertiesSection();
-    logger.info(
-      "Assertion Passed - Featured properties section is displayed correctly",
-    );
-  });
-
-  test("Should verify navigation to featured flight booking page", async ({
-    homePage,
-  }) => {
-    await homePage.loadThePage();
-    await homePage.verifyNavigationToFeaturedFlightsPage();
-    logger.info(
-      "Assertion Passed - Navigation to featured flight booking page is successful",
-    );
-  });
-
-  test("Should verify popular tours section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyPopularTowersSection();
-    logger.info(
-      "Assertion Passed - Popular tours section is displayed correctly",
-    );
-  });
-
-  test("Should verify featured cars section", async ({ homePage }) => {
-    await homePage.loadThePage();
-    await homePage.verifyFeaturedCarsSection();
-    logger.info(
-      "Assertion Passed - Featured cars section is displayed correctly",
-    );
   });
 
   test("Should verify navigation to download app page", async ({

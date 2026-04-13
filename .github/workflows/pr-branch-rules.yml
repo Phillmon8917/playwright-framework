@@ -3,8 +3,8 @@ name: PR Branch Rules Enforcement
 on:
   pull_request:
     branches:
-      - "**"   # Run on all PRs
-    types: [opened, synchronize, reopened]   # Trigger on these PR events
+      - "**"
+    types: [opened, synchronize, reopened]
 
 jobs:
   branch-validation:
@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Validate PR branches
+        shell: bash
         run: |
           echo "Starting PR branch validation..."
 
@@ -24,33 +25,28 @@ jobs:
           echo "Source: $SOURCE_BRANCH"
           echo "Destination: $DEST_BRANCH"
 
-          fail() { echo "ERROR: $1"; exit 1; }
+          fail() { echo "❌ ERROR: $1"; exit 1; }
 
-          # Rule 1: New branches must start with hotfix/, bugfix/, feature/
           if [[ "$SOURCE_BRANCH" != "develop" && "$SOURCE_BRANCH" != "qa" && "$SOURCE_BRANCH" != "main" ]]; then
             if [[ ! "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]]; then
-              fail "Branch '$SOURCE_BRANCH' must start with feature/, bugfix/, or hotfix/"
+              fail "Branch '$SOURCE_BRANCH' is invalid. New branches must start with 'feature/', 'bugfix/', or 'hotfix/'."
             fi
           fi
 
-          # Rule 2: PRs from new branches → develop only
           if [[ "$SOURCE_BRANCH" =~ ^(feature|bugfix|hotfix)/ ]] && [[ "$DEST_BRANCH" != "develop" ]]; then
-            fail "New branches ($SOURCE_BRANCH) must create PRs to 'develop' only"
+            fail "Branch '$SOURCE_BRANCH' must target 'develop'. PRs from feature/bugfix/hotfix branches cannot target '$DEST_BRANCH'."
           fi
 
-          # Rule 3: PRs from develop → qa only
           if [[ "$SOURCE_BRANCH" == "develop" ]] && [[ "$DEST_BRANCH" != "qa" ]]; then
-            fail "PRs from 'develop' must target 'qa'"
+            fail "Branch 'develop' must target 'qa'. PRs from 'develop' to '$DEST_BRANCH' are not allowed."
           fi
 
-          # Rule 4: PRs from qa → main only
           if [[ "$SOURCE_BRANCH" == "qa" ]] && [[ "$DEST_BRANCH" != "main" ]]; then
-            fail "PRs from 'qa' must target 'main'"
+            fail "Branch 'qa' must target 'main'. PRs from 'qa' to '$DEST_BRANCH' are not allowed."
           fi
 
-          # Rule 5: PRs from main are not allowed
           if [[ "$SOURCE_BRANCH" == "main" ]]; then
-            fail "Direct PRs from 'main' are not allowed"
+            fail "Direct PRs from 'main' are blocked. Changes must flow from 'qa' → 'main'."
           fi
 
           echo "✅ PR branch rules ran successfully."

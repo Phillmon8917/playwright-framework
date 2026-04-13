@@ -2,7 +2,6 @@ import winston from "winston";
 
 class Logger {
   private logger: winston.Logger;
-
   constructor() {
     this.logger = winston.createLogger({
       level: "info",

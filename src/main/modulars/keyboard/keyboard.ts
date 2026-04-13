@@ -1,5 +1,5 @@
 import { Page, Locator } from "@playwright/test";
-import { logger } from "../../utils/logger/logger";
+import { logger } from "../../utils/logger/logger.ts";
 
 export class KeyboardActions {
   private readonly page: Page;
