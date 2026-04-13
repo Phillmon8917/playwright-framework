@@ -1,20 +1,20 @@
 import { test } from "../../../src/main/fixtures/fixture.ts";
 import { logger } from "../../main/utils/logger/logger.ts";
 
-test.describe("Home Page @regression @guest", {tag: "@sanity"}, () => {
-  test("Verify Home Page is loaded", async ({ homePage }) => {
+test.describe("Home Page @regression @guest", () => {
+  test("Verify Home Page is loaded", {tag: "@sanity"}, async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyPageLoaded();
     logger.info("Assertion Passed -Home Page is loaded");
   });
 
-  test("Verify header navigation links are present", async ({ homePage }) => {
+  test("Verify header navigation links are present", {tag: "@sanity"}, async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyThatHeaderNavLinksAreVisible();
     logger.info("Assertion Passed - Header navigation links are present");
   });
 
-  test("Verify navigation to visa booking page", async ({ homePage }) => {
+  test("Verify navigation to visa booking page", {tag: "@sanity"}, async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyNavigationToVisaBookingPage();
     logger.info(
@@ -22,7 +22,7 @@ test.describe("Home Page @regression @guest", {tag: "@sanity"}, () => {
     );
   });
 
-  test("Verify navigation to tours booking page", async ({ homePage }) => {
+  test("Verify navigation to tours booking page", {tag: "@sanity"}, async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyNavigationToToursBooking();
     logger.info(
@@ -30,7 +30,7 @@ test.describe("Home Page @regression @guest", {tag: "@sanity"}, () => {
     );
   });
 
-  test("Verify navigation to cars booking page", async ({ homePage }) => {
+  test("Verify navigation to cars booking page", {tag: "@sanity"}, async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyNavigationToCarsBooking();
     logger.info(
@@ -38,7 +38,7 @@ test.describe("Home Page @regression @guest", {tag: "@sanity"}, () => {
     );
   });
 
-  test("Verify navigation to flight booking page", async ({ homePage }) => {
+  test("Verify navigation to flight booking page", {tag: "@sanity"}, async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyNavigationToFlightsBooking();
     logger.info(
@@ -106,7 +106,7 @@ test.describe("Home Page @regression @guest", {tag: "@sanity"}, () => {
     logger.info("Assertion Passed - Navigation to blogs page is successful");
   });
 
-  test("Should verify language change", async ({ homePage }) => {
+  test("Should verify language change", {tag: "@sanity"}, async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyLanguageChange("Russian");
     logger.info("Assertion Passed - Language change is successful");
@@ -152,7 +152,7 @@ test.describe("Home Page @regression @guest", {tag: "@sanity"}, () => {
     logger.info("Assertion Passed - All quick search tabs are visible");
   });
 
-  test("Should verify navigation to download app page", async ({
+  test("Should verify navigation to download app page", {tag: "@sanity"}, async ({
     homePage,
   }) => {
     await homePage.loadThePage();
