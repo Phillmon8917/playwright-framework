@@ -3,8 +3,9 @@ import { ai } from "@zerostep/playwright";
 import { FakerHelper } from "../../main/utils/faker/fakerHelper.ts";
 import { logger } from "../../main/utils/logger/logger.ts";
 
-test.describe("Agent Signup Page @regression", () => {
-  test("Verify successful customer signup", async ({
+test.describe("Agent Signup Page @regression @guest", () => {
+
+  test("Verify successful customer signup", {tag: "@sanity"}, async ({
     homePage,
     signupPage,
     page,
@@ -36,7 +37,7 @@ test.describe("Agent Signup Page @regression", () => {
     logger.info("Assertion Passed - Customer signup is successful");
   });
 
-  test("Verify firstName input validation", async ({
+  test("Verify firstName input validation", {tag: "@sanity"}, async ({
     homePage,
     signupPage,
   }) => {
@@ -93,7 +94,7 @@ test.describe("Agent Signup Page @regression", () => {
     logger.info("Assertion Passed - Email input validation is successful");
   });
 
-  test("Verify password input validation", async ({
+  test("Verify password input validation", {tag: "@sanity"}, async ({
     homePage,
     signupPage,
   }) => {

@@ -1,0 +1,13 @@
+import { test as setup } from "../../main/fixtures/fixture.ts";
+import { CredentialsProvider } from "../../main/utils/credentialsProvider/credentialsProvider.utils.ts";
+import { logger } from "../../main/utils/logger/logger.ts";
+
+setup.describe("Agent Authentication Tests", () => {
+  setup("Agent Login Test", async ({ homePage, loginPage }) => {
+    await homePage.loadThePage();
+    await homePage.verifyNavigationToLoginPage();
+    const credentials = CredentialsProvider.getCredentials("agent");
+    await loginPage.agentLogin(credentials[0], credentials[1], true);
+    logger.info("Agent login test passed");
+  });
+});

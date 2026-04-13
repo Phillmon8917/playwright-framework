@@ -9,6 +9,10 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "test:report": "npm run lint && playwright test",
     "test:local": "playwright test --reporter=html && npx playwright show-report",
+    "test:guest": "playwright test --reporter=html --project=guest && npx playwright show-report",
+    "test:customer": "playwright test --reporter=html --project=customer && npx playwright show-report",
+    "test:agent": "playwright test --reporter=html --project=agent && npx playwright show-report",
+    "test:admin": "playwright test --reporter=html --project=admin && npx playwright show-report",
     "test:record": "npx playwright codegen",
     "test:debug": "npx playwright test --debug"
   },
