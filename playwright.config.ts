@@ -24,8 +24,38 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "PHPTRAVELS Project",
+      name: "auth",
       use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/authentication/authentication.auth.ts",
+    },
+    {
+      name: "guest",
+      dependencies: ["auth"],
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "customer",
+      dependencies: ["auth"],
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "storage/customer.json",
+      },
+    },
+    {
+      name: "agent",
+      dependencies: ["guest", "customer"],
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "storage/agent.json",
+      },
+    },
+    {
+      name: "admin",
+      dependencies: ["agent"],
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "storage/admin.json",
+      },
     },
   ],
 });
