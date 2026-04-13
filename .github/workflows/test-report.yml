@@ -19,6 +19,7 @@ jobs:
       matrix:
         shard: [1, 2, 3, 4, 5, 6]
     env:
+      CI: true
       ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -70,6 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     env:
+      CI: true
       DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
       DATA_REPO_OWNER: Phillmon8917
       DATA_REPO_NAME: phptravels-reports
@@ -97,6 +99,15 @@ jobs:
           pattern: playwright-blob-shard-*
           merge-multiple: true
           path: all-blob-reports
+
+      - name: Check blob reports exist
+        run: |
+          if [ ! -d "all-blob-reports" ] || [ -z "$(ls -A all-blob-reports)" ]; then
+            echo "No blob reports found — shards may have all failed"
+            exit 1
+          fi
+          echo "Found blob reports:"
+          ls -la all-blob-reports/
 
       - name: Merge shard reports into HTML report
         run: npx playwright merge-reports --reporter html ./all-blob-reports
