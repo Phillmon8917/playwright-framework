@@ -24,38 +24,55 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "auth",
+      name: "auth-customer",
       use: { ...devices["Desktop Chrome"] },
-      testMatch: "**/authentication/authentication.auth.ts",
+      testMatch: "**/authentication/customer.auth.ts",
+    },
+    {
+      name: "auth-agent",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/authentication/agent.auth.ts",
+    },
+    {
+      name: "auth-admin",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/authentication/admin.auth.ts",
     },
     {
       name: "guest",
-      dependencies: ["auth"],
       use: { ...devices["Desktop Chrome"] },
+      grep: /@guest/,
+      testIgnore: "**/authentication/**",
     },
     {
       name: "customer",
-      dependencies: ["auth"],
+      dependencies: ["auth-customer"],
       use: {
         ...devices["Desktop Chrome"],
         storageState: "storage/customer.json",
       },
+      grep: /@customer/,
+      testIgnore: "**/authentication/**",
     },
     {
       name: "agent",
-      dependencies: ["guest", "customer"],
+      dependencies: ["auth-agent"],
       use: {
         ...devices["Desktop Chrome"],
         storageState: "storage/agent.json",
       },
+      grep: /@agent/,
+      testIgnore: "**/authentication/**",
     },
     {
       name: "admin",
-      dependencies: ["agent"],
+      dependencies: ["auth-admin"],
       use: {
         ...devices["Desktop Chrome"],
         storageState: "storage/admin.json",
       },
+      grep: /@admin/,
+      testIgnore: "**/authentication/**",
     },
   ],
 });

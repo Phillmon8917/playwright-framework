@@ -1,7 +1,7 @@
 import { test } from "../../../src/main/fixtures/fixture.ts";
 import { logger } from "../../main/utils/logger/logger.ts";
 
-test.describe("Home Page @regression", () => {
+test.describe("Home Page @regression @guest", {tag: "@sanity"}, () => {
   test("Verify Home Page is loaded", async ({ homePage }) => {
     await homePage.loadThePage();
     await homePage.verifyPageLoaded();
