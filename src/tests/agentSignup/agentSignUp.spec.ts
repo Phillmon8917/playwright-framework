@@ -127,7 +127,7 @@ test.describe("Agent Signup Page @regression @guest", () => {
       confirmPassword: "",
       agreeToTerms: true,
       expectValidationErrors: true,
-      fieldId: "confirm_password1",
+      fieldId: "confirm_password",
     });
     logger.info("Assertion Passed - Confirm password input validation is successful");
   });
