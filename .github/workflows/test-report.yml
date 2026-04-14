@@ -7,18 +7,19 @@ permissions:
   id-token: write
 
 on:
-  push:
-    branches:
-      - qa
-      - develop
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
 
 jobs:
-  test-report:
+  test-shard:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
     env:
+      CI: true
       ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -49,33 +50,78 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run tests and append run to data repo
-        run: npm run test:report
+      - name: Run tests shard ${{ matrix.shard }} of 6
+        run: npx playwright test --shard=${{ matrix.shard }}/6
         env:
           DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
           DATA_REPO_OWNER: Phillmon8917
           DATA_REPO_NAME: phptravels-reports
           DATA_REPO_BRANCH: main
 
-      - name: Inject custom style into Playwright report
+      - name: Upload blob report
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-blob-shard-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 1
+
+  merge-and-deploy:
+    needs: test-shard
+    runs-on: ubuntu-latest
+    if: always()
+    env:
+      CI: true
+      DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
+      DATA_REPO_OWNER: Phillmon8917
+      DATA_REPO_NAME: phptravels-reports
+      DATA_REPO_BRANCH: main
+
+    steps:
+      - name: Checkout test repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Download all blob reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: playwright-blob-shard-*
+          merge-multiple: true
+          path: all-blob-reports
+
+      - name: Check blob reports exist
+        run: |
+          if [ ! -d "all-blob-reports" ] || [ -z "$(ls -A all-blob-reports)" ]; then
+            echo "No blob reports found — shards may have all failed"
+            exit 1
+          fi
+          echo "Found blob reports:"
+          ls -la all-blob-reports/
+
+      - name: Merge shard reports into HTML report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Inject custom style into Playwright report
         run: node scripts/style-report.js
 
       - name: Build monthly QA report
-        if: always()
         run: node --loader ts-node/esm src/main/report/build-report.ts
-        env:
-          DATA_REPO_TOKEN: ${{ secrets.DATA_REPO_TOKEN }}
-          DATA_REPO_OWNER: Phillmon8917
-          DATA_REPO_NAME: phptravels-reports
-          DATA_REPO_BRANCH: main
 
       - name: Set report date
-        if: always()
         run: echo "REPORT_DATE=$(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_ENV
 
       - name: Assemble Pages directory
-        if: always()
         run: |
           mkdir -p gh-pages/test-results
           mkdir -p gh-pages/monthly-report
@@ -169,7 +215,6 @@ jobs:
           HTML
 
       - name: Deploy to GitHub Pages
-        if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
