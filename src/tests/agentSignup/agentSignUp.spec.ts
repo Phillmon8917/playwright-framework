@@ -113,7 +113,7 @@ test.describe("Agent Signup Page @regression @guest", () => {
     logger.info("Assertion Passed - Password input validation is successful");
   });
 
-   test("Verify confirm password input validation", async ({
+   test("Verify confirm password input validation",{tag: "@sanity"}, async ({
     homePage,
     signupPage,
   }) => {
@@ -127,7 +127,7 @@ test.describe("Agent Signup Page @regression @guest", () => {
       confirmPassword: "",
       agreeToTerms: true,
       expectValidationErrors: true,
-      fieldId: "confirm_password",
+      fieldId: "confirm_password1",
     });
     logger.info("Assertion Passed - Confirm password input validation is successful");
   });
