@@ -76,7 +76,10 @@ export async function githubLoadStore(
   }
 
   const json = (await res.json()) as { content: string; sha: string };
-  const content = Buffer.from(json.content, "base64").toString("utf-8");
+  const content = Buffer.from(
+    json.content.replace(/\s/g, ""),
+    "base64",
+  ).toString("utf-8");
   const store = JSON.parse(content) as MonthlyStore;
 
   logger.info(
