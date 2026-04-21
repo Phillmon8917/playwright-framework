@@ -40,7 +40,9 @@ function dataPath(month: string): string {
 
 /**
  * Fetches a monthly JSON store file from the GitHub repo.
- * Returns an empty store if the file does not exist yet.
+ * Returns an empty store if the file does not exist yet, has empty content,
+ * or contains invalid JSON — passing back the existing SHA so any subsequent
+ * save will overwrite the corrupt file rather than creating a duplicate.
  * @param {string} month - Month in YYYY-MM format.
  * @returns {Promise<{ store: MonthlyStore; sha: string | null }>}
  */
@@ -80,7 +82,25 @@ export async function githubLoadStore(
     json.content.replace(/\s/g, ""),
     "base64",
   ).toString("utf-8");
-  const store = JSON.parse(content) as MonthlyStore;
+
+  // Guard: file exists in repo but has empty content
+  if (!content.trim()) {
+    logger.warn(
+      `[github-store] ${month}.json exists but has empty content — treating as empty store`,
+    );
+    return { store: { month, runs: [] }, sha: json.sha };
+  }
+
+  // Guard: file exists but contains invalid JSON
+  let store: MonthlyStore;
+  try {
+    store = JSON.parse(content) as MonthlyStore;
+  } catch (e) {
+    logger.warn(
+      `[github-store] ${month}.json has invalid JSON — resetting to empty store. Error: ${e}`,
+    );
+    return { store: { month, runs: [] }, sha: json.sha };
+  }
 
   logger.info(
     `[github-store] Loaded ${month}.json (sha: ${json.sha.slice(0, 7)}, runs: ${store.runs.length})`,
@@ -197,8 +217,29 @@ export async function githubLoadKnownTestIds(): Promise<Set<string>> {
   }
 
   const json = (await res.json()) as { content: string };
-  const content = Buffer.from(json.content, "base64").toString("utf-8");
-  const ids = JSON.parse(content) as string[];
+  const content = Buffer.from(
+    json.content.replace(/\s/g, ""),
+    "base64",
+  ).toString("utf-8");
+
+  // Guard: file exists but has empty content
+  if (!content.trim()) {
+    logger.warn(
+      `[github-store] known-test-ids.json exists but has empty content — treating as empty set`,
+    );
+    return new Set();
+  }
+
+  // Guard: file exists but contains invalid JSON
+  let ids: string[];
+  try {
+    ids = JSON.parse(content) as string[];
+  } catch (e) {
+    logger.warn(
+      `[github-store] known-test-ids.json has invalid JSON — resetting to empty set. Error: ${e}`,
+    );
+    return new Set();
+  }
 
   logger.info(`[github-store] Loaded ${ids.length} known test IDs`);
   return new Set(ids);
