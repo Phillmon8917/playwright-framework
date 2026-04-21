@@ -12,7 +12,11 @@ const OUT_PATH = path.resolve(__dirname, "../../dist/report.html");
 
 /**
  * Builds the monthly HTML report from the previous month's run data.
+ * Reads the HTML template, injects report data as a window variable,
+ * and writes the output to dist/report.html.
  * In CI the data comes from GitHub; locally it comes from data/ on disk.
+ * @returns {Promise<void>}
+ * @throws {Error} If the HTML template is missing a </head> tag.
  */
 export async function buildReport(): Promise<void> {
   const { reportMonth, reportStore } = await loadReportData();
@@ -45,8 +49,10 @@ export async function buildReport(): Promise<void> {
   logger.info(`   Runs  : ${reportStore.runs.length}`);
 }
 
-// Run directly when called as a script
 buildReport().catch((err) => {
-  logger.error(err);
+  logger.error(err instanceof Error ? err.message : String(err));
+  if (err instanceof Error && err.stack) {
+    logger.error(err.stack);
+  }
   process.exit(1);
 });
