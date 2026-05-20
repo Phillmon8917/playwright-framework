@@ -1,0 +1,831 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - link "PHP TRAVELS" [ref=e6] [cursor=pointer]:
+          - /url: https://phptravels.net/
+          - img "PHP TRAVELS" [ref=e7]
+        - navigation [ref=e8]:
+          - button "Services expand_more" [ref=e10] [cursor=pointer]:
+            - generic [ref=e11]: Services
+            - generic [ref=e12]: expand_more
+          - button "Company expand_more" [ref=e14] [cursor=pointer]:
+            - generic [ref=e15]: Company
+            - generic [ref=e16]: expand_more
+          - link "Blogs" [ref=e17] [cursor=pointer]:
+            - /url: https://phptravels.net/page/blog
+      - generic [ref=e18]:
+        - button "English flag English expand_more" [ref=e20] [cursor=pointer]:
+          - img "English flag" [ref=e21]
+          - generic [ref=e22]: English
+          - generic [ref=e23]: expand_more
+        - button "USD flag USD expand_more" [ref=e25] [cursor=pointer]:
+          - img "USD flag" [ref=e26]
+          - generic [ref=e27]: USD
+          - generic [ref=e28]: expand_more
+        - link "login Login" [ref=e29] [cursor=pointer]:
+          - /url: https://phptravels.net/login
+          - generic [ref=e30]: login
+          - generic [ref=e31]: Login
+        - button "person_add Signup expand_more" [ref=e33] [cursor=pointer]:
+          - generic [ref=e34]: person_add
+          - generic [ref=e35]: Signup
+          - generic [ref=e36]: expand_more
+  - generic [ref=e37]:
+    - generic [ref=e39]:
+      - heading "Travel the way you love!" [level=1] [ref=e40]
+      - paragraph [ref=e41]: Let's help you plan your next journey the one that will leave a lifetime of memories.
+    - img "Hero" [ref=e42]
+    - generic [ref=e44]:
+      - tablist [ref=e45]:
+        - tab "hotel Stays" [ref=e46] [cursor=pointer]:
+          - generic [ref=e47]: hotel
+          - generic [ref=e48]: Stays
+        - tab "directions_car Cars" [ref=e49] [cursor=pointer]:
+          - generic [ref=e50]: directions_car
+          - generic [ref=e51]: Cars
+        - tab "flight_takeoff Flights" [ref=e52] [cursor=pointer]:
+          - generic [ref=e53]: flight_takeoff
+          - generic [ref=e54]: Flights
+        - tab "explore Tours" [ref=e55] [cursor=pointer]:
+          - generic [ref=e56]: explore
+          - generic [ref=e57]: Tours
+        - tab "mosque Umrah" [ref=e58] [cursor=pointer]:
+          - generic [ref=e59]: mosque
+          - generic [ref=e60]: Umrah
+        - tab "card_membership Visa" [ref=e61] [cursor=pointer]:
+          - generic [ref=e62]: card_membership
+          - generic [ref=e63]: Visa
+      - tabpanel [ref=e65]:
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]:
+                - generic [ref=e72]: location_on
+                - text: Destination or Hotel Name
+              - generic [ref=e74]:
+                - generic: location_on
+                - textbox "Search By City" [ref=e75]
+            - generic [ref=e76]:
+              - generic [ref=e77]:
+                - generic [ref=e78]: calendar_today
+                - text: Check-in
+              - textbox "Check-in Date" [ref=e79]: 23-05-2026
+            - generic [ref=e80]:
+              - generic [ref=e81]:
+                - generic [ref=e82]: calendar_today
+                - text: Check-out
+              - textbox "Check-out Date" [ref=e83]: 24-05-2026
+          - generic [ref=e84]:
+            - generic [ref=e85]:
+              - generic [ref=e86]:
+                - generic [ref=e87]: person
+                - text: Guests & Rooms
+              - generic [ref=e89] [cursor=pointer]:
+                - generic [ref=e90]: 2 Guests, 1 Room
+                - generic [ref=e91]: expand_more
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e94]: flag
+                - text: Nationality
+              - generic [ref=e96] [cursor=pointer]:
+                - generic [ref=e97]: Select Nationality
+                - generic [ref=e98]: expand_more
+            - button "search Search Hotels" [ref=e100] [cursor=pointer]:
+              - generic [ref=e101]: search
+              - generic [ref=e102]: Search Hotels
+  - generic [ref=e103]:
+    - generic [ref=e105]:
+      - generic [ref=e106]:
+        - heading "Featured Properties" [level=2] [ref=e107]
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e110]: verified
+            - generic [ref=e111]: We price match
+          - generic [ref=e112]:
+            - generic [ref=e113]: task_alt
+            - generic [ref=e114]: Hotel Booking Guarantee
+          - generic [ref=e115]:
+            - generic [ref=e116]: workspace_premium
+            - generic [ref=e117]: Hotel Stay Guarantee
+        - generic [ref=e119]:
+          - button "Dubai" [ref=e120] [cursor=pointer]
+          - button "New York" [ref=e121] [cursor=pointer]
+          - button "Barcelona" [ref=e122] [cursor=pointer]
+          - button "Tokyo" [ref=e123] [cursor=pointer]
+          - button "Maldives" [ref=e124] [cursor=pointer]
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - generic [ref=e127]:
+            - generic [ref=e129]:
+              - generic [ref=e130]: 15% OFF
+              - generic [ref=e131]:
+                - generic [ref=e132]: location_on
+                - text: Dubai
+            - img "Burj Al Arab" [ref=e133]
+          - generic [ref=e134]:
+            - heading "Burj Al Arab" [level=3] [ref=e135]
+            - paragraph [ref=e136]:
+              - generic [ref=e137]: home
+              - generic [ref=e138]: Jumeirah Beach Road
+            - generic [ref=e139]:
+              - generic [ref=e140]:
+                - generic [ref=e141]: From
+                - generic [ref=e142]: USD 1,545.00
+              - generic [ref=e144]:
+                - img [ref=e145]
+                - generic [ref=e147]: "2.0"
+          - link [ref=e148] [cursor=pointer]:
+            - /url: https://phptravels.net/stay/burj-al-arab/200/hotels/_/23-05-2026/24-05-2026/NULL/1/2-0
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - generic [ref=e152]:
+              - generic [ref=e153]: 15% OFF
+              - generic [ref=e154]:
+                - generic [ref=e155]: location_on
+                - text: Dubai
+            - img "Atlantis The Palm" [ref=e156]
+          - generic [ref=e157]:
+            - heading "Atlantis The Palm" [level=3] [ref=e158]
+            - paragraph [ref=e159]:
+              - generic [ref=e160]: home
+              - generic [ref=e161]: Palm Jumeirah
+            - generic [ref=e162]:
+              - generic [ref=e163]:
+                - generic [ref=e164]: From
+                - generic [ref=e165]: USD 463.50
+              - generic [ref=e167]:
+                - img [ref=e168]
+                - generic [ref=e170]: "5.0"
+          - link [ref=e171] [cursor=pointer]:
+            - /url: https://phptravels.net/stay/atlantis-the-palm/201/hotels/_/23-05-2026/24-05-2026/NULL/1/2-0
+        - generic [ref=e172]:
+          - generic [ref=e173]:
+            - generic [ref=e175]:
+              - generic [ref=e176]: 10% OFF
+              - generic [ref=e177]:
+                - generic [ref=e178]: location_on
+                - text: Dubai
+            - img "Address Downtown Dubai" [ref=e179]
+          - generic [ref=e180]:
+            - heading "Address Downtown Dubai" [level=3] [ref=e181]
+            - paragraph [ref=e182]:
+              - generic [ref=e183]: home
+              - generic [ref=e184]: Sheikh Mohammed Bin Rashed Boulevard, P.O Box 111969
+            - generic [ref=e185]:
+              - generic [ref=e186]:
+                - generic [ref=e187]: From
+                - generic [ref=e188]: USD 432.60
+              - generic [ref=e190]:
+                - img [ref=e191]
+                - generic [ref=e193]: "5.0"
+          - link [ref=e194] [cursor=pointer]:
+            - /url: https://phptravels.net/stay/address-downtown-dubai/202/hotels/_/23-05-2026/24-05-2026/NULL/1/2-0
+        - generic [ref=e195]:
+          - generic [ref=e196]:
+            - generic [ref=e198]:
+              - generic [ref=e199]: 10% OFF
+              - generic [ref=e200]:
+                - generic [ref=e201]: location_on
+                - text: Dubai
+            - img "JW Marriott Marquis Dubai" [ref=e202]
+          - generic [ref=e203]:
+            - heading "JW Marriott Marquis Dubai" [level=3] [ref=e204]
+            - paragraph [ref=e205]:
+              - generic [ref=e206]: home
+              - generic [ref=e207]: Sheikh Zayed Road, Business Bay
+            - generic [ref=e208]:
+              - generic [ref=e209]:
+                - generic [ref=e210]: From
+                - generic [ref=e211]: USD 360.50
+              - generic [ref=e213]:
+                - img [ref=e214]
+                - generic [ref=e216]: "5.0"
+          - link [ref=e217] [cursor=pointer]:
+            - /url: https://phptravels.net/stay/jw-marriott-marquis-dubai/203/hotels/_/23-05-2026/24-05-2026/NULL/1/2-0
+    - generic [ref=e219]:
+      - generic [ref=e220]:
+        - heading "Featured Cars" [level=2] [ref=e222]
+        - generic [ref=e223]:
+          - generic [ref=e224]:
+            - generic [ref=e225]: verified
+            - generic [ref=e226]: Verified Cars
+          - generic [ref=e227]:
+            - generic [ref=e228]: task_alt
+            - generic [ref=e229]: Instant Confirmation
+          - generic [ref=e230]:
+            - generic [ref=e231]: workspace_premium
+            - generic [ref=e232]: Best Price Guaranteed
+        - generic [ref=e234]:
+          - button "Dubai" [ref=e235] [cursor=pointer]
+          - button "London" [ref=e236] [cursor=pointer]
+          - button "Paris" [ref=e237] [cursor=pointer]
+          - button "Barcelona" [ref=e238] [cursor=pointer]
+          - button "Bangkok" [ref=e239] [cursor=pointer]
+          - button "Rome" [ref=e240] [cursor=pointer]
+          - button "Antalya" [ref=e241] [cursor=pointer]
+          - button "Kuala Lumpur" [ref=e242] [cursor=pointer]
+      - generic [ref=e243]:
+        - generic [ref=e244] [cursor=pointer]:
+          - generic [ref=e245]:
+            - generic [ref=e248]:
+              - generic [ref=e249]: location_on
+              - text: Dubai
+            - img "Mazda 6 or similar" [ref=e250]
+          - generic [ref=e251]:
+            - generic [ref=e252]: Refundable
+            - generic [ref=e253]:
+              - heading "Mazda 6 or similar" [level=3] [ref=e254]
+              - generic [ref=e255]:
+                - generic [ref=e256]: star
+                - generic [ref=e257]: "4.6"
+            - paragraph [ref=e258]: Mazda 6 or similar 2024
+            - generic [ref=e259]:
+              - generic [ref=e260]:
+                - generic [ref=e261]: person
+                - generic [ref=e262]: 5 Seats
+              - generic [ref=e263]:
+                - generic [ref=e264]: settings
+                - generic [ref=e265]: Automatic
+              - generic [ref=e266]:
+                - generic [ref=e267]: work
+                - generic [ref=e268]: 5 Bags
+              - generic [ref=e269]:
+                - generic [ref=e270]: local_gas_station
+                - generic [ref=e271]: Unspecified
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - generic [ref=e274]: Daily Rate
+                - generic [ref=e276]: USD 232.66
+              - generic [ref=e277]:
+                - text: Book Now
+                - generic [ref=e278]: arrow_forward
+        - generic [ref=e279] [cursor=pointer]:
+          - generic [ref=e280]:
+            - generic [ref=e283]:
+              - generic [ref=e284]: location_on
+              - text: Dubai
+            - img "Dodge Charger or similar" [ref=e285]
+          - generic [ref=e286]:
+            - generic [ref=e287]: Refundable
+            - generic [ref=e288]:
+              - heading "Dodge Charger or similar" [level=3] [ref=e289]
+              - generic [ref=e290]:
+                - generic [ref=e291]: star
+                - generic [ref=e292]: "4.1"
+            - paragraph [ref=e293]: Dodge Charger or similar 2024
+            - generic [ref=e294]:
+              - generic [ref=e295]:
+                - generic [ref=e296]: person
+                - generic [ref=e297]: 4 Seats
+              - generic [ref=e298]:
+                - generic [ref=e299]: settings
+                - generic [ref=e300]: Automatic
+              - generic [ref=e301]:
+                - generic [ref=e302]: work
+                - generic [ref=e303]: 3 Bags
+              - generic [ref=e304]:
+                - generic [ref=e305]: local_gas_station
+                - generic [ref=e306]: Unspecified
+            - generic [ref=e307]:
+              - generic [ref=e308]:
+                - generic [ref=e309]: Daily Rate
+                - generic [ref=e311]: USD 476.22
+              - generic [ref=e312]:
+                - text: Book Now
+                - generic [ref=e313]: arrow_forward
+        - generic [ref=e314] [cursor=pointer]:
+          - generic [ref=e315]:
+            - generic [ref=e318]:
+              - generic [ref=e319]: location_on
+              - text: Dubai
+            - img "Volkswagen Golf GTI or similar" [ref=e320]
+          - generic [ref=e321]:
+            - generic [ref=e322]: Refundable
+            - generic [ref=e323]:
+              - heading "Volkswagen Golf GTI or similar" [level=3] [ref=e324]
+              - generic [ref=e325]:
+                - generic [ref=e326]: star
+                - generic [ref=e327]: "4.5"
+            - paragraph [ref=e328]: Volkswagen Golf GTI or similar 2024
+            - generic [ref=e329]:
+              - generic [ref=e330]:
+                - generic [ref=e331]: person
+                - generic [ref=e332]: 5 Seats
+              - generic [ref=e333]:
+                - generic [ref=e334]: settings
+                - generic [ref=e335]: Automatic
+              - generic [ref=e336]:
+                - generic [ref=e337]: work
+                - generic [ref=e338]: 3 Bags
+              - generic [ref=e339]:
+                - generic [ref=e340]: local_gas_station
+                - generic [ref=e341]: Unspecified
+            - generic [ref=e342]:
+              - generic [ref=e343]:
+                - generic [ref=e344]: Daily Rate
+                - generic [ref=e346]: USD 538.01
+              - generic [ref=e347]:
+                - text: Book Now
+                - generic [ref=e348]: arrow_forward
+        - generic [ref=e349] [cursor=pointer]:
+          - generic [ref=e350]:
+            - generic [ref=e353]:
+              - generic [ref=e354]: location_on
+              - text: Dubai
+            - img "Mini Cooper or similar" [ref=e355]
+          - generic [ref=e356]:
+            - generic [ref=e357]: Refundable
+            - generic [ref=e358]:
+              - heading "Mini Cooper or similar" [level=3] [ref=e359]
+              - generic [ref=e360]:
+                - generic [ref=e361]: star
+                - generic [ref=e362]: "4.2"
+            - paragraph [ref=e363]: Mini Cooper or similar 2024
+            - generic [ref=e364]:
+              - generic [ref=e365]:
+                - generic [ref=e366]: person
+                - generic [ref=e367]: 4 Seats
+              - generic [ref=e368]:
+                - generic [ref=e369]: settings
+                - generic [ref=e370]: Automatic
+              - generic [ref=e371]:
+                - generic [ref=e372]: work
+                - generic [ref=e373]: 2 Bags
+              - generic [ref=e374]:
+                - generic [ref=e375]: local_gas_station
+                - generic [ref=e376]: Unspecified
+            - generic [ref=e377]:
+              - generic [ref=e378]:
+                - generic [ref=e379]: Daily Rate
+                - generic [ref=e381]: USD 576.19
+              - generic [ref=e382]:
+                - text: Book Now
+                - generic [ref=e383]: arrow_forward
+    - generic [ref=e385]:
+      - generic [ref=e386]:
+        - heading "Featured Flights" [level=2] [ref=e387]
+        - paragraph [ref=e388]: These alluring destinations are picked just for you
+      - generic [ref=e389]:
+        - link "CDG flight BCN Paris airlines Air France Barcelona calendar_today One Way from USD 180" [ref=e390] [cursor=pointer]:
+          - /url: https://phptravels.net/flights/cdg/bcn/oneway/economy/31-03-2026/1/0/0
+          - generic [ref=e392]:
+            - generic [ref=e393]:
+              - generic [ref=e394]: CDG
+              - generic [ref=e397]: flight
+              - generic [ref=e399]: BCN
+            - generic [ref=e400]:
+              - paragraph [ref=e402]: Paris
+              - paragraph [ref=e404]:
+                - generic [ref=e405]: airlines
+                - text: Air France
+              - paragraph [ref=e407]: Barcelona
+            - generic [ref=e408]:
+              - generic [ref=e409]:
+                - generic [ref=e410]: calendar_today
+                - text: One Way
+              - generic [ref=e411]: from USD 180
+        - link "DXB flight LHR Dubai airlines Emirates London calendar_today One Way from USD 650" [ref=e412] [cursor=pointer]:
+          - /url: https://phptravels.net/flights/dxb/lhr/oneway/economy/10-03-2026/1/0/0
+          - generic [ref=e414]:
+            - generic [ref=e415]:
+              - generic [ref=e416]: DXB
+              - generic [ref=e419]: flight
+              - generic [ref=e421]: LHR
+            - generic [ref=e422]:
+              - paragraph [ref=e424]: Dubai
+              - paragraph [ref=e426]:
+                - generic [ref=e427]: airlines
+                - text: Emirates
+              - paragraph [ref=e429]: London
+            - generic [ref=e430]:
+              - generic [ref=e431]:
+                - generic [ref=e432]: calendar_today
+                - text: One Way
+              - generic [ref=e433]: from USD 650
+        - link "LHR flight JFK London airlines British Airways New York calendar_today One Way from USD 780" [ref=e434] [cursor=pointer]:
+          - /url: https://phptravels.net/flights/lhr/jfk/oneway/economy/13-03-2026/1/0/0
+          - generic [ref=e436]:
+            - generic [ref=e437]:
+              - generic [ref=e438]: LHR
+              - generic [ref=e441]: flight
+              - generic [ref=e443]: JFK
+            - generic [ref=e444]:
+              - paragraph [ref=e446]: London
+              - paragraph [ref=e448]:
+                - generic [ref=e449]: airlines
+                - text: British Airways
+              - paragraph [ref=e451]: New York
+            - generic [ref=e452]:
+              - generic [ref=e453]:
+                - generic [ref=e454]: calendar_today
+                - text: One Way
+              - generic [ref=e455]: from USD 780
+        - link "DIA flight SIN Doha airlines Qatar Airways Singapore calendar_today One Way from USD 590" [ref=e456] [cursor=pointer]:
+          - /url: https://phptravels.net/flights/dia/sin/oneway/economy/16-03-2026/1/0/0
+          - generic [ref=e458]:
+            - generic [ref=e459]:
+              - generic [ref=e460]: DIA
+              - generic [ref=e463]: flight
+              - generic [ref=e465]: SIN
+            - generic [ref=e466]:
+              - paragraph [ref=e468]: Doha
+              - paragraph [ref=e470]:
+                - generic [ref=e471]: airlines
+                - text: Qatar Airways
+              - paragraph [ref=e473]: Singapore
+            - generic [ref=e474]:
+              - generic [ref=e475]:
+                - generic [ref=e476]: calendar_today
+                - text: One Way
+              - generic [ref=e477]: from USD 590
+        - link "SIN flight SYD Singapore airlines Singapore Airlines Sydney calendar_today One Way from USD 520" [ref=e478] [cursor=pointer]:
+          - /url: https://phptravels.net/flights/sin/syd/oneway/economy/19-03-2026/1/0/0
+          - generic [ref=e480]:
+            - generic [ref=e481]:
+              - generic [ref=e482]: SIN
+              - generic [ref=e485]: flight
+              - generic [ref=e487]: SYD
+            - generic [ref=e488]:
+              - paragraph [ref=e490]: Singapore
+              - paragraph [ref=e492]:
+                - generic [ref=e493]: airlines
+                - text: Singapore Airlines
+              - paragraph [ref=e495]: Sydney
+            - generic [ref=e496]:
+              - generic [ref=e497]:
+                - generic [ref=e498]: calendar_today
+                - text: One Way
+              - generic [ref=e499]: from USD 520
+        - link "IST flight CDG Istanbul airlines Turkish Airlines Paris calendar_today One Way from USD 280" [ref=e500] [cursor=pointer]:
+          - /url: https://phptravels.net/flights/ist/cdg/oneway/economy/22-03-2026/1/0/0
+          - generic [ref=e502]:
+            - generic [ref=e503]:
+              - generic [ref=e504]: IST
+              - generic [ref=e507]: flight
+              - generic [ref=e509]: CDG
+            - generic [ref=e510]:
+              - paragraph [ref=e512]: Istanbul
+              - paragraph [ref=e514]:
+                - generic [ref=e515]: airlines
+                - text: Turkish Airlines
+              - paragraph [ref=e517]: Paris
+            - generic [ref=e518]:
+              - generic [ref=e519]:
+                - generic [ref=e520]: calendar_today
+                - text: One Way
+              - generic [ref=e521]: from USD 280
+    - generic [ref=e523]:
+      - generic [ref=e524]:
+        - heading "Popular Tours" [level=2] [ref=e525]
+        - generic [ref=e526]:
+          - generic [ref=e527]:
+            - generic [ref=e528]: verified
+            - generic [ref=e529]: We price match
+          - generic [ref=e530]:
+            - generic [ref=e531]: task_alt
+            - generic [ref=e532]: Tour Booking Guarantee
+          - generic [ref=e533]:
+            - generic [ref=e534]: workspace_premium
+            - generic [ref=e535]: Tour Quality Guarantee
+        - generic [ref=e537]:
+          - button "Dubai" [ref=e538] [cursor=pointer]
+          - button "New York" [ref=e539] [cursor=pointer]
+          - button "Barcelona" [ref=e540] [cursor=pointer]
+          - button "Tokyo" [ref=e541] [cursor=pointer]
+          - button "Maldives" [ref=e542] [cursor=pointer]
+          - button "Paris" [ref=e543] [cursor=pointer]
+          - button "London" [ref=e544] [cursor=pointer]
+          - button "Rome" [ref=e545] [cursor=pointer]
+      - generic [ref=e546]:
+        - generic [ref=e547]:
+          - generic [ref=e548]:
+            - generic [ref=e550]:
+              - generic [ref=e551]: 10.00% OFF
+              - generic [ref=e552]:
+                - generic [ref=e553]: location_on
+                - text: Dubai
+            - 'img "Dubai: Skip-The-Line Ticket to Dubai Miracle Garden" [ref=e554]'
+          - generic [ref=e555]:
+            - 'heading "Dubai: Skip-The-Line Ticket to Dubai Miracle Garden" [level=3] [ref=e556]'
+            - generic [ref=e557]:
+              - generic [ref=e558]: schedule
+              - generic [ref=e559]: 2 Days / 1 Night
+            - generic [ref=e560]:
+              - generic [ref=e561]:
+                - generic [ref=e562]: From
+                - generic [ref=e563]:
+                  - generic [ref=e564]: USD 158.62
+                  - generic [ref=e565]: /Person
+              - generic [ref=e567]:
+                - img [ref=e568]
+                - generic [ref=e569]: "5.0"
+          - link [ref=e570] [cursor=pointer]:
+            - /url: https://phptravels.net/tour/dubai-skip-the-line-ticket-to-dubai-miracle-garden/100/tours/23-05-2026/2/2-0
+        - generic [ref=e571]:
+          - generic [ref=e572]:
+            - generic [ref=e574]:
+              - generic [ref=e575]: 15.00% OFF
+              - generic [ref=e576]:
+                - generic [ref=e577]: location_on
+                - text: Dubai
+            - img "Private Dubai Airport Transfer DXB to Dubai City" [ref=e578]
+          - generic [ref=e579]:
+            - heading "Private Dubai Airport Transfer DXB to Dubai City" [level=3] [ref=e580]
+            - generic [ref=e581]:
+              - generic [ref=e582]: schedule
+              - generic [ref=e583]: 4 Days / 3 Nights
+            - generic [ref=e584]:
+              - generic [ref=e585]:
+                - generic [ref=e586]: From
+                - generic [ref=e587]:
+                  - generic [ref=e588]: USD 297.66
+                  - generic [ref=e589]: /Person
+              - generic [ref=e591]:
+                - img [ref=e592]
+                - generic [ref=e593]: "5.0"
+          - link [ref=e594] [cursor=pointer]:
+            - /url: https://phptravels.net/tour/private-dubai-airport-transfer-dxb-to-dubai-city/101/tours/23-05-2026/4/2-0
+        - generic [ref=e595]:
+          - generic [ref=e596]:
+            - generic [ref=e598]:
+              - generic [ref=e599]: 23.00% OFF
+              - generic [ref=e600]:
+                - generic [ref=e601]: location_on
+                - text: Dubai
+            - img "Dubai Frame" [ref=e602]
+          - generic [ref=e603]:
+            - heading "Dubai Frame" [level=3] [ref=e604]
+            - generic [ref=e605]:
+              - generic [ref=e606]: schedule
+              - generic [ref=e607]: 2 Days / 1 Night
+            - generic [ref=e608]:
+              - generic [ref=e609]:
+                - generic [ref=e610]: From
+                - generic [ref=e611]:
+                  - generic [ref=e612]: USD 475.86
+                  - generic [ref=e613]: /Person
+              - generic [ref=e615]:
+                - img [ref=e616]
+                - generic [ref=e617]: "5.0"
+          - link [ref=e618] [cursor=pointer]:
+            - /url: https://phptravels.net/tour/dubai-frame/102/tours/23-05-2026/2/2-0
+        - generic [ref=e619]:
+          - generic [ref=e620]:
+            - generic [ref=e622]:
+              - generic [ref=e623]: 24.00% OFF
+              - generic [ref=e624]:
+                - generic [ref=e625]: location_on
+                - text: Dubai
+            - img "Ain Dubai Dubai Eye" [ref=e626]
+          - generic [ref=e627]:
+            - heading "Ain Dubai Dubai Eye" [level=3] [ref=e628]
+            - generic [ref=e629]:
+              - generic [ref=e630]: schedule
+              - generic [ref=e631]: 3 Days / 2 Nights
+            - generic [ref=e632]:
+              - generic [ref=e633]:
+                - generic [ref=e634]: From
+                - generic [ref=e635]:
+                  - generic [ref=e636]: USD 316.80
+                  - generic [ref=e637]: /Person
+              - generic [ref=e639]:
+                - img [ref=e640]
+                - generic [ref=e641]: "5.0"
+          - link [ref=e642] [cursor=pointer]:
+            - /url: https://phptravels.net/tour/ain-dubai-dubai-eye/103/tours/23-05-2026/3/2-0
+    - generic [ref=e644]:
+      - generic [ref=e645]:
+        - heading "Featured Blogs" [level=2] [ref=e647]
+        - link "View All arrow_forward" [ref=e648] [cursor=pointer]:
+          - /url: https://phptravels.net/blog
+          - text: View All
+          - generic [ref=e649]: arrow_forward
+      - generic [ref=e650]:
+        - 'link "Sustainable Travel: How to Reduce Your Carbon Footprint Travel Tips Sustainable Travel: How to Reduce Your Carbon Footprint Feb 17, 2026" [ref=e651] [cursor=pointer]':
+          - /url: https://phptravels.net/blog/sustainable-travel-reduce-carbon-footprint
+          - 'img "Sustainable Travel: How to Reduce Your Carbon Footprint" [ref=e653]'
+          - generic [ref=e654]:
+            - text: Travel Tips
+            - 'heading "Sustainable Travel: How to Reduce Your Carbon Footprint" [level=3] [ref=e655]'
+            - text: Feb 17, 2026
+        - link "A Food Lover Guide to Istanbul Food & Dining A Food Lover Guide to Istanbul Feb 7, 2026" [ref=e656] [cursor=pointer]:
+          - /url: https://phptravels.net/blog/food-lovers-guide-istanbul
+          - img "A Food Lover Guide to Istanbul" [ref=e658]
+          - generic [ref=e659]:
+            - text: Food & Dining
+            - heading "A Food Lover Guide to Istanbul" [level=3] [ref=e660]
+            - text: Feb 7, 2026
+        - link "The Most Stunning Hiking Trails in the World Adventure Tours The Most Stunning Hiking Trails in the World Jan 28, 2026" [ref=e661] [cursor=pointer]:
+          - /url: https://phptravels.net/blog/worlds-most-stunning-hiking-trails
+          - img "The Most Stunning Hiking Trails in the World" [ref=e663]
+          - generic [ref=e664]:
+            - text: Adventure Tours
+            - heading "The Most Stunning Hiking Trails in the World" [level=3] [ref=e665]
+            - text: Jan 28, 2026
+        - link "How to Plan Your First Solo Trip Travel Tips How to Plan Your First Solo Trip Jan 18, 2026" [ref=e666] [cursor=pointer]:
+          - /url: https://phptravels.net/blog/how-to-plan-your-first-solo-trip
+          - img "How to Plan Your First Solo Trip" [ref=e668]
+          - generic [ref=e669]:
+            - text: Travel Tips
+            - heading "How to Plan Your First Solo Trip" [level=3] [ref=e670]
+            - text: Jan 18, 2026
+    - generic [ref=e672]:
+      - img "Mobile Apps" [ref=e674]
+      - generic [ref=e676]:
+        - heading "Travel on the go with our app" [level=1] [ref=e677]
+        - paragraph [ref=e678]: Book from your phone anytime, anywhere.
+        - generic [ref=e679]:
+          - link "Download on the App Store" [ref=e680] [cursor=pointer]:
+            - /url: https://itunes.apple.com/us/app/phptravels/id1018217005
+            - img [ref=e681]
+            - generic [ref=e683]:
+              - generic [ref=e684]: Download on the
+              - generic [ref=e685]: App Store
+          - link "Get it on Google Play" [ref=e686] [cursor=pointer]:
+            - /url: https://play.google.com/store/apps/details?id=com.phptravelsnative
+            - img [ref=e687]
+            - generic [ref=e689]:
+              - generic [ref=e690]: Get it on
+              - generic [ref=e691]: Google Play
+  - contentinfo [ref=e692]:
+    - generic [ref=e694]:
+      - generic [ref=e695]:
+        - generic [ref=e696]:
+          - img "PHP TRAVELS" [ref=e697]
+          - paragraph [ref=e698]: Your trusted travel partner for unforgettable journeys. Discover the world with our comprehensive booking services.
+        - generic [ref=e700]:
+          - generic [ref=e702]: headset_mic
+          - generic [ref=e703]:
+            - paragraph [ref=e704]: 24/7 Support
+            - paragraph [ref=e705]: Always here to help
+      - generic [ref=e707]:
+        - generic [ref=e708]:
+          - heading "Support" [level=4] [ref=e709]
+          - list [ref=e710]:
+            - listitem [ref=e711]:
+              - link "Affiliate Program" [ref=e712] [cursor=pointer]:
+                - /url: https://phptravels.net/page/affiliate-program
+            - listitem [ref=e713]:
+              - link "Investors" [ref=e714] [cursor=pointer]:
+                - /url: https://phptravels.net/page/investors
+            - listitem [ref=e715]:
+              - link "Careers and Jobs" [ref=e716] [cursor=pointer]:
+                - /url: https://phptravels.net/page/careers-and-jobs
+            - listitem [ref=e717]:
+              - link "How to Book" [ref=e718] [cursor=pointer]:
+                - /url: https://phptravels.net/page/how-to-book
+            - listitem [ref=e719]:
+              - link "File a Claim" [ref=e720] [cursor=pointer]:
+                - /url: https://phptravels.net/page/file-a-claim
+            - listitem [ref=e721]:
+              - link "Refund Policy" [ref=e722] [cursor=pointer]:
+                - /url: https://phptravels.net/page/refund-policy
+        - generic [ref=e723]:
+          - heading "Company" [level=4] [ref=e724]
+          - list [ref=e725]:
+            - listitem [ref=e726]:
+              - link "Contact us" [ref=e727] [cursor=pointer]:
+                - /url: https://phptravels.net/page/contact-us
+            - listitem [ref=e728]:
+              - link "About us" [ref=e729] [cursor=pointer]:
+                - /url: https://phptravels.net/page/about-us
+            - listitem [ref=e730]:
+              - link "Cookies Policy" [ref=e731] [cursor=pointer]:
+                - /url: https://phptravels.net/page/cookies-policy
+            - listitem [ref=e732]:
+              - link "Privacy Policy" [ref=e733] [cursor=pointer]:
+                - /url: https://phptravels.net/page/privacy-policy
+            - listitem [ref=e734]:
+              - link "Become a Supplier" [ref=e735] [cursor=pointer]:
+                - /url: https://phptravels.net/page/become-a-supplier
+            - listitem [ref=e736]:
+              - link "Terms of Use" [ref=e737] [cursor=pointer]:
+                - /url: https://phptravels.net/page/terms-of-use
+        - generic [ref=e738]:
+          - heading "Explore" [level=4] [ref=e739]
+          - list [ref=e740]:
+            - listitem [ref=e741]:
+              - link "Best Travel Deals" [ref=e742] [cursor=pointer]:
+                - /url: https://phptravels.net/page/best-travel-deals
+            - listitem [ref=e743]:
+              - link "Travel Documents" [ref=e744] [cursor=pointer]:
+                - /url: https://phptravels.net/page/travel-documents
+            - listitem [ref=e745]:
+              - link "Travel Insurance" [ref=e746] [cursor=pointer]:
+                - /url: https://phptravels.net/page/travel-insurance
+            - listitem [ref=e747]:
+              - link "Disruption" [ref=e748] [cursor=pointer]:
+                - /url: https://phptravels.net/page/disruption
+            - listitem [ref=e749]:
+              - link "FAQ / Answers" [ref=e750] [cursor=pointer]:
+                - /url: https://phptravels.net/page/frequently-asked-questions
+            - listitem [ref=e751]:
+              - link "Accessibility" [ref=e752] [cursor=pointer]:
+                - /url: https://phptravels.net/page/accessibility
+      - generic [ref=e753]:
+        - heading "Get In Touch" [level=4] [ref=e754]
+        - generic [ref=e755]:
+          - generic [ref=e756]:
+            - generic [ref=e757]: location_on
+            - paragraph [ref=e758]: 71 St, Suite 900 San Francisco, United States
+          - generic [ref=e759]:
+            - generic [ref=e760]: call
+            - link "123456789" [ref=e761] [cursor=pointer]:
+              - /url: tel:123456789
+          - generic [ref=e762]:
+            - generic [ref=e763]: mail
+            - link "emails@agency.com" [ref=e764] [cursor=pointer]:
+              - /url: mailto:emails@agency.com
+          - generic [ref=e766]:
+            - link "Facebook" [ref=e767] [cursor=pointer]:
+              - /url: https://www.facebook.com/phptravels
+              - img [ref=e768]
+            - link "Twitter" [ref=e770] [cursor=pointer]:
+              - /url: https://www.twitter.com/phptravels
+              - img [ref=e771]
+            - link "Instagram" [ref=e773] [cursor=pointer]:
+              - /url: https://www.instagram.com/phptravels
+              - img [ref=e774]
+            - link "YouTube" [ref=e776] [cursor=pointer]:
+              - /url: https://www.youtube.com/@phptravels
+              - img [ref=e777]
+            - link "LinkedIn" [ref=e779] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/phptravels
+              - img [ref=e780]
+    - generic [ref=e784]:
+      - generic [ref=e785]:
+        - paragraph [ref=e786]: © 2026 PHP TRAVELS. All rights reserved.
+        - paragraph [ref=e787]:
+          - text: Powered by
+          - link "PHPTRAVELS" [ref=e788] [cursor=pointer]:
+            - /url: https://phptravels.com
+      - generic [ref=e789]:
+        - link "Privacy Policy" [ref=e790] [cursor=pointer]:
+          - /url: https://phptravels.net/page/privacy-policy
+        - generic [ref=e791]: •
+        - link "Terms of Use" [ref=e792] [cursor=pointer]:
+          - /url: https://phptravels.net/page/terms-of-use
+        - generic [ref=e793]: •
+        - link "Cookies Policy" [ref=e794] [cursor=pointer]:
+          - /url: https://phptravels.net/page/cookies-policy
+        - generic [ref=e795]: •
+        - link "Refund Policy" [ref=e796] [cursor=pointer]:
+          - /url: https://phptravels.net/page/refund-policy
+      - generic [ref=e797]:
+        - generic [ref=e798]:
+          - generic [ref=e799]: verified_user
+          - generic [ref=e800]: SSL Secure
+        - link "verified IATA" [ref=e801] [cursor=pointer]:
+          - /url: https://iata.co
+          - generic [ref=e802]: verified
+          - generic [ref=e803]: IATA
+        - generic [ref=e804]:
+          - generic [ref=e805]: credit_card
+          - generic [ref=e806]: PCI DSS
+  - generic [ref=e808]:
+    - generic [ref=e810]:
+      - generic [ref=e811]: ⚠️
+      - generic [ref=e812]:
+        - 'heading "Important Notice: Demo Environment" [level=2] [ref=e813]'
+        - paragraph [ref=e814]: Please read this information carefully before using the system
+    - generic [ref=e815]:
+      - generic [ref=e816]:
+        - generic [ref=e817]: currency_exchange
+        - generic [ref=e818]:
+          - heading "Pricing May Not Reflect Real Rates" [level=3] [ref=e819]
+          - paragraph [ref=e820]: Prices displayed in this demo environment are simulated and may differ significantly from real-world rates. Live rates require valid supplier API credentials to be configured in your account settings.
+      - generic [ref=e821]:
+        - generic [ref=e822]: vpn_key
+        - generic [ref=e823]:
+          - heading "Configure Your Own API Credentials" [level=3] [ref=e824]
+          - paragraph [ref=e825]:
+            - text: To access real supplier data and accurate pricing, you must add your own API keys through
+            - strong [ref=e826]: Admin Settings → Modules
+            - text: . This will enable live data integration and replace all demo content with real-time information.
+      - generic [ref=e827]:
+        - generic [ref=e828]: credit_card
+        - generic [ref=e829]:
+          - heading "Testing Environment Only - NO Real Payments" [level=3] [ref=e830]
+          - paragraph [ref=e831]: This is a testing platform for development purposes. Do not use real payment methods or credit card information. All payment gateway integrations are configured in sandbox/testing mode exclusively.
+      - generic [ref=e832]:
+        - generic [ref=e833]: storage
+        - generic [ref=e834]:
+          - heading "Demo Data May Be Reset Periodically" [level=3] [ref=e835]
+          - paragraph [ref=e836]: Demo environment data, including bookings, reservations, and settings, may be reset periodically for maintenance. Do not rely on this system for storing critical business information or live customer data.
+      - generic [ref=e837]:
+        - generic [ref=e838]: help
+        - generic [ref=e839]:
+          - heading "Need Help or Ready for Production?" [level=3] [ref=e840]
+          - paragraph [ref=e841]:
+            - text: For comprehensive documentation, technical support, API integration guides, and assistance with moving to production, visit
+            - link "phptravels.com" [ref=e842] [cursor=pointer]:
+              - /url: https://phptravels.com
+    - generic [ref=e843]:
+      - link "Learn More" [ref=e844] [cursor=pointer]:
+        - /url: https://phptravels.com/pricing
+      - button "I Understand & Continue" [ref=e845] [cursor=pointer]
+```
